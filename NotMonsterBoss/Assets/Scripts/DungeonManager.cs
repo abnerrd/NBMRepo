@@ -108,8 +108,8 @@ public class DungeonManager : MonoBehaviour
 
     void initializeDungeon()
     {
-        //GameObject newRoom = _roomGen.GenerateUniqueBoss ();
-        GameObject newRoom = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs\\TestBossRoomPrefab"));
+        GameObject newRoom = _roomGen.GenerateUniqueBoss ();
+        //GameObject newRoom = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs\\TestBossRoomPrefab"));
         addRoom(newRoom.GetComponent<BossRoomScript>());
     }
 
@@ -154,7 +154,7 @@ public class DungeonManager : MonoBehaviour
             expedition.currentRoom = (toEntrance ? getDungeonEntrance() : m_roomsList[index]);
             expedition.setTimerToCurrentRoom();
             StartCoroutine(attemptRoom(expedition));
-            Debug.Log("Updating expedition " + expedition.adventureTitle + " to room " + expedition.currentRoom.gameObject.name);
+            Debug.Log (expedition.adventurers [0]._unitName + " has now entered " + expedition.currentRoom.room_name);
         }
     }
 
@@ -226,8 +226,6 @@ public class DungeonManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("PACKET FAIL");
-
             // CONDITION :: Adventurer failed the challenge
 
             Debug.Log (packet.currentRoom.failure);
@@ -241,8 +239,6 @@ public class DungeonManager : MonoBehaviour
 
             if(packet.partyDead)
             {
-                Debug.Log("TODO aherrera: Kill and update appropriate rooms? Deathrattle, etc. -- Maybe have an event occur in UnitScript, \"onUnitDeath\"??");
-                Debug.Log("PACKET DEAD");
                 packet.triggerAsFailed();
             }
             else

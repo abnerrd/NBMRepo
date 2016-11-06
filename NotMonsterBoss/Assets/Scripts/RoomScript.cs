@@ -14,8 +14,8 @@ public class RoomScript : MonoBehaviour
     [SerializeField]
     [Tooltip("seconds")]
     private
-        float m_timer_frequency;
-    public float timer_frequency { get { return m_timer_frequency; } set { m_timer_frequency = value; } }   //  in seconds
+        int m_timer_frequency;
+    public int timer_frequency { get { return m_timer_frequency; } set { m_timer_frequency = value; } }   //  in seconds
 
     [SerializeField]
     private
@@ -62,7 +62,7 @@ public class RoomScript : MonoBehaviour
     private
         string m_name = "";
     public
-        string room_name { get { return room_name; } set { room_name = value; } }
+        string room_name { get { return m_name; } set { m_name = value; } }
 
     [SerializeField]
     private
@@ -142,8 +142,6 @@ public class RoomScript : MonoBehaviour
     
     public virtual bool challengeUnit(UnitScript unitChallenging)
     {
-        Debug.Log("TODO aherrera: change these up to be more D&D exciting and stuff");
-
         int challengesPassed = 0;
 
         if (challengeDexterity (unitChallenging.dexterity)) challengesPassed++;

@@ -19,7 +19,7 @@ public class RoomGenerator : MonoBehaviour
     public RoomScript Generate (string name = "Default", string description = "Default Description", 
                                 string success = "You succeeded", string failure = "You failed", 
                                 Enums.UnitRarity rarity = Enums.UnitRarity.e_rarity_COMMON,
-                                int dex = 1, int str = 1, int wis = 1, int atk = 0)
+                                int dex = 1, int str = 1, int wis = 1, int atk = 0, int timer = 10, int passReq = 1)
     {
         GameObject newRoom = new GameObject ();
         RoomScript roomScript = newRoom.AddComponent<RoomScript> ();
@@ -34,6 +34,8 @@ public class RoomGenerator : MonoBehaviour
         roomScript.wisdom_challenge = wis;
         roomScript.room_attack = atk;
         roomScript._isBossRoom = false;
+        roomScript.timer_frequency = timer;
+        roomScript.pass_req = passReq;
 
         return roomScript;
     }
@@ -41,7 +43,7 @@ public class RoomGenerator : MonoBehaviour
     public GameObject GenerateBoss (string name = "Default", string description = "Default Description",
                                     string success = "You succeeded", string failure = "You failed",
                                     Enums.UnitRarity rarity = Enums.UnitRarity.e_rarity_COMMON,
-                                    int dex = 1, int str = 1, int wis = 1, int atk = 0)
+                                    int dex = 1, int str = 1, int wis = 1, int atk = 0, int timer = 10, int passReq = 1)
     {
         GameObject newRoom = new GameObject ();
         BossRoomScript roomScript = newRoom.AddComponent<BossRoomScript> ();
@@ -59,6 +61,8 @@ public class RoomGenerator : MonoBehaviour
         roomScript.strength_challenge = str;
         roomScript.wisdom_challenge = wis;
         roomScript.room_attack = atk;
+        roomScript.timer_frequency = timer;
+        roomScript.pass_req = passReq;
 
         return newRoom;
     }
@@ -69,7 +73,7 @@ public class RoomGenerator : MonoBehaviour
         RoomScript roomScript = newRoom.AddComponent<RoomScript> ();
         RoomData roomData = dataBase.GetRandomRoom ();
 
-        roomScript.room_name = roomData.name;
+        roomScript.room_name = roomData.room_name;
         roomScript.description = roomData.description;
         roomScript.rarity = EnumUtility.StringToRarity(roomData.rarity);
         roomScript.success = roomData.success;
@@ -79,6 +83,8 @@ public class RoomGenerator : MonoBehaviour
         roomScript.wisdom_challenge = roomData.cr_wis;
         roomScript.room_attack = roomData.attackDamage;
         roomScript._isBossRoom = roomData.is_boss;
+        roomScript.timer_frequency = roomData.timer;
+        roomScript.pass_req = roomData.pass_req;
 
         newRoom.name = roomScript.room_name + " - " + roomScript.description;
 
@@ -88,10 +94,10 @@ public class RoomGenerator : MonoBehaviour
     public GameObject GenerateUniqueBoss ()
     {
         GameObject newRoom = new GameObject ();
-        RoomScript roomScript = newRoom.AddComponent<RoomScript> ();
+        BossRoomScript roomScript = newRoom.AddComponent<BossRoomScript> ();
         RoomData roomData = dataBase.GetRandomBossRoom ();
 
-        roomScript.room_name = roomData.name;
+        roomScript.room_name = roomData.room_name;
         roomScript.description = roomData.description;
         roomScript.rarity = EnumUtility.StringToRarity (roomData.rarity);
         roomScript.success = roomData.success;
@@ -101,6 +107,8 @@ public class RoomGenerator : MonoBehaviour
         roomScript.wisdom_challenge = roomData.cr_wis;
         roomScript.room_attack = roomData.attackDamage;
         roomScript._isBossRoom = roomData.is_boss;
+        roomScript.timer_frequency = roomData.timer;
+        roomScript.pass_req = roomData.pass_req;
 
         newRoom.name = roomScript.room_name + " - " + roomScript.description;
 

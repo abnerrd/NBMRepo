@@ -36,7 +36,7 @@ public class DebugScript : MonoBehaviour
         {
             if (Input.GetKeyUp(KeyCode.N))
             {
-                DungeonManager.instance.addRoom (_RoomGen.Generate ());
+                DungeonManager.instance.addRoom (_RoomGen.GenerateUnique ());
                 //DungeonManager.instance.addRoom (GameObject.Instantiate(_RoomPrefab).GetComponent<RoomScript>());
             }
             if (Input.GetKeyUp(KeyCode.A))

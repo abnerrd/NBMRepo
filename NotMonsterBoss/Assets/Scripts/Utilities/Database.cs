@@ -121,7 +121,6 @@ public class Database : MonoBehaviour{
         for (int i = 0; i < roomInfo.Count; i++) {
             string roomID = roomInfo [i].name;
             roomList [roomID] = roomInfo [i];
-            Debug.Log ("Loading Room called: " + roomInfo [i].name);
         }
     }
     #endregion
