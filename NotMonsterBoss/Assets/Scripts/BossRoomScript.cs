@@ -6,6 +6,8 @@ public class BossRoomScript : RoomScript
     [SerializeField]
     private
         BossScript bossReference;
+    public BossScript boss { get { return bossReference; } set { bossReference = value; } }
+        
 
     void Awake()
     {
@@ -23,6 +25,11 @@ public class BossRoomScript : RoomScript
     {
 	
 	}
+
+    public string getBossName ()
+    {
+        return bossReference.boss_name;
+    }
 
     public override bool challengeAdventurer(AdventurerScript adventurerChallenging)
     {

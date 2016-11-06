@@ -9,4 +9,5 @@ public static class EnumUtility
 
 
     public static Enums.UnitRarity StringToRarity (string rarity) { return (Enums.UnitRarity)System.Enum.Parse (typeof (Enums.UnitRarity), rarity); }
+    public static Enums.RoomType StringToRoomType (string type) { return (Enums.RoomType)System.Enum.Parse (typeof (Enums.RoomType), type); }
 }

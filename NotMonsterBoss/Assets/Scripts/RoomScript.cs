@@ -9,20 +9,6 @@ using Utilities;
 //
 //  Dungeons are in charge of resetting a room, as well as triggering on room timer effects
 
-// TODO aherrera : move these definitions into their own class
-
-/// <summary>
-/// 
-/// </summary>
-//public enum RoomType
-//{
-//    e_room_none = -1,
-//    e_room_MINION,
-//    e_room_TRAP,
-
-//    e_room_count
-//}
-
 public class RoomScript : MonoBehaviour
 {
     [SerializeField]
@@ -51,10 +37,43 @@ public class RoomScript : MonoBehaviour
        int m_attack_damage = 0;
     public int room_attack { get { return m_attack_damage; } set { m_attack_damage = value; } }
 
+    [SerializeField]
+    private
+        int m_passes_required = 0;
+    public int pass_req { get { return  m_passes_required; } set { m_passes_required = value; } }
 
-    // TODO aherrera: add in cost for room?
+    [SerializeField]
+    private
+        string m_success_description = "";
 
-    // TODO aherrera: room types?
+    public string success { get { return m_success_description; } set { m_success_description = value; } }
+    [SerializeField]
+        string m_failure_description = "";
+    public string failure { get { return m_failure_description; } set { m_failure_description = value; } }
+
+
+    [SerializeField]
+    private
+        string m_description = "";
+    public
+        string description { get { return m_description; } set { m_description = value; } }
+
+    [SerializeField]
+    private
+        string m_name = "";
+    public
+        string room_name { get { return room_name; } set { room_name = value; } }
+
+    [SerializeField]
+    private
+        Enums.RoomType m_type;
+    public 
+        Enums.RoomType type { get { return m_type; } set { m_type = value; } }
+    [SerializeField]
+    private
+        Enums.UnitRarity m_rarity;
+    public
+        Enums.UnitRarity rarity { get { return m_rarity; } set { m_rarity = value; } }
 
     // TODO aherrera: extend to be an inherited class? BossRoom?
     public bool _isBossRoom = false;
@@ -124,7 +143,14 @@ public class RoomScript : MonoBehaviour
     public virtual bool challengeUnit(UnitScript unitChallenging)
     {
         Debug.Log("TODO aherrera: change these up to be more D&D exciting and stuff");
-        return (challengeStrength(unitChallenging.strength) && challengeDexterity(unitChallenging.dexterity) && challengeWisdom(unitChallenging.wisdom));
+
+        int challengesPassed = 0;
+
+        if (challengeDexterity (unitChallenging.dexterity)) challengesPassed++;
+        if (challengeStrength (unitChallenging.strength)) challengesPassed++;
+        if (challengeWisdom (unitChallenging.wisdom)) challengesPassed++;
+
+        return (challengesPassed >= m_passes_required);
     }
 
     public virtual bool challengeAdventurer(AdventurerScript adventurerChallenging)

@@ -50,6 +50,8 @@ public class AdventurerGenerator : MonoBehaviour
         adventurerScript.wisdom = adventurerData.wis_mod;
         adventurerScript.attack_damage = adventurerData.attackDamage;
 
+        newAdventurer.name = adventurerScript._unitName + ", " + adventurerScript._unitDescription;
+
         return adventurerScript;
     }
 

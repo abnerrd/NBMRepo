@@ -11,6 +11,7 @@ public class DebugScript : MonoBehaviour
     public GameObject _AdventurerPrefab;
 
     public AdventurerGenerator _AdventurerGen;
+    public RoomGenerator _RoomGen;
 
     void Awake()
     {
@@ -35,12 +36,11 @@ public class DebugScript : MonoBehaviour
         {
             if (Input.GetKeyUp(KeyCode.N))
             {
-                DungeonManager.instance.addRoom(GameObject.Instantiate(_RoomPrefab).GetComponent<RoomScript>());
+                DungeonManager.instance.addRoom (_RoomGen.Generate ());
+                //DungeonManager.instance.addRoom (GameObject.Instantiate(_RoomPrefab).GetComponent<RoomScript>());
             }
             if (Input.GetKeyUp(KeyCode.A))
             {
-                //DungeonManager.instance.enterDungeon(GameObject.Instantiate(_AdventurerPrefab).GetComponent<AdventurerScript>());
-                //DungeonManager.instance.enterDungeon (_AdventurerGen.GenerateByName ("Billy").GetComponent<AdventurerScript> ());
                 DungeonManager.instance.enterDungeon (_AdventurerGen.GenerateUnique ());
             }
         }

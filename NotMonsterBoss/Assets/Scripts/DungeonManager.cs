@@ -76,6 +76,9 @@ public class DungeonManager : MonoBehaviour
 
     GameObject _roomsParent;
 
+    Database _dataBase;
+    public RoomGenerator _roomGen;
+
     // TODO aherrera: minions list
 
 
@@ -94,6 +97,7 @@ public class DungeonManager : MonoBehaviour
         m_adventurersList = new List<AdventurerPacket>();
         _roomsParent = new GameObject();
         _roomsParent.name = "Parent -- Rooms";
+        _dataBase = GameObject.Find ("Database").GetComponent<Database> ();
     }
 
 	// Use this for initialization
@@ -104,14 +108,9 @@ public class DungeonManager : MonoBehaviour
 
     void initializeDungeon()
     {
-        // STEP ### Add Boss room
-            //  Add to Rooms list
-                // TODO aherrera: SHould I have this actually go through addRoom() function??
+        //GameObject newRoom = _roomGen.GenerateUniqueBoss ();
         GameObject newRoom = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs\\TestBossRoomPrefab"));
-        BossRoomScript script_bossRoom = newRoom.GetComponent<BossRoomScript>();
-        script_bossRoom._isBossRoom = true;
-        addRoom(script_bossRoom);
-        newRoom.name = "BOSS ROOM";
+        addRoom(newRoom.GetComponent<BossRoomScript>());
     }
 
     
@@ -182,11 +181,13 @@ public class DungeonManager : MonoBehaviour
     {
         List<AdventurerScript> solo_party = new List<AdventurerScript>();
         solo_party.Add(newAdventurer);
-        enterDungeon(solo_party, newAdventurer.name + " Quest for Glory");
+        enterDungeon(solo_party, newAdventurer.name + "'s Quest for Glory");
     }
 
     public void enterDungeon(List<AdventurerScript> adventureParty, string expeditionTitle = "SuperQuest")
     {
+        Debug.Log ("And so begins " + expeditionTitle);
+
         AdventurerPacket newExpedition = new AdventurerPacket();
         newExpedition.initializePacket();
         foreach(AdventurerScript ad in adventureParty)
@@ -218,6 +219,8 @@ public class DungeonManager : MonoBehaviour
         {
             // CONDITION :: Adventurer beat room challenge
 
+            Debug.Log (packet.currentRoom.success);
+
             // TODO aherrera: update to next room and any effects that happen here!!
             updateExpeditionToNextRoom(ref packet);
         }
@@ -226,6 +229,8 @@ public class DungeonManager : MonoBehaviour
             Debug.Log("PACKET FAIL");
 
             // CONDITION :: Adventurer failed the challenge
+
+            Debug.Log (packet.currentRoom.failure);
 
             // TODO aherrera: post-mortem on what happens, and set if packet is still alive
             foreach(AdventurerScript ad in packet.adventurers)
@@ -242,6 +247,7 @@ public class DungeonManager : MonoBehaviour
             }
             else
             {
+
                 // TODO aherrera: update to next room and any effects that happen here!!
                 updateExpeditionToNextRoom(ref packet);
             }
