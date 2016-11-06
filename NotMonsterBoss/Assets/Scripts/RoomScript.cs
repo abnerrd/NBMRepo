@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+using Utilities;
+
 // Rooms make up a Dungeon
 // Each room has a timer, and when completed it'll set itself as done
 //
@@ -12,14 +14,14 @@ using System.Collections.Generic;
 /// <summary>
 /// 
 /// </summary>
-public enum RoomType
-{
-    e_room_none = -1,
-    e_room_MINION,
-    e_room_TRAP,
+//public enum RoomType
+//{
+//    e_room_none = -1,
+//    e_room_MINION,
+//    e_room_TRAP,
 
-    e_room_count
-}
+//    e_room_count
+//}
 
 public class RoomScript : MonoBehaviour
 {

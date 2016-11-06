@@ -10,6 +10,8 @@ public class DebugScript : MonoBehaviour
     public GameObject _RoomPrefab;
     public GameObject _AdventurerPrefab;
 
+    public AdventurerGenerator _AdventurerGen;
+
     void Awake()
     {
         if (instance == null)
@@ -18,6 +20,7 @@ public class DebugScript : MonoBehaviour
         {
             DestroyObject(this.gameObject);
         }
+
     }
 
 	// Use this for initialization
@@ -36,7 +39,9 @@ public class DebugScript : MonoBehaviour
             }
             if (Input.GetKeyUp(KeyCode.A))
             {
-                DungeonManager.instance.enterDungeon(GameObject.Instantiate(_AdventurerPrefab).GetComponent<AdventurerScript>());
+                //DungeonManager.instance.enterDungeon(GameObject.Instantiate(_AdventurerPrefab).GetComponent<AdventurerScript>());
+                //DungeonManager.instance.enterDungeon (_AdventurerGen.GenerateByName ("Billy").GetComponent<AdventurerScript> ());
+                DungeonManager.instance.enterDungeon (_AdventurerGen.GenerateUnique ());
             }
         }
     }

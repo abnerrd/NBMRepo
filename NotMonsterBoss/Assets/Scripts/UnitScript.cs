@@ -1,38 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Utilities;
 
+/// <summary>
 // Base Unit Script for entities
-
-// TODO aherrera: Move these definitions into their own class
-
-/// <summary>
-/// Defines the race of the Unit; Room synergy
 /// </summary>
-public enum UnitTypes
-{
-    e_type_none = -1,
-    e_type_BEAST,
-    e_type_HUMANOID,
-    e_type_UNDEAD,
-    e_type_DEMON,
-
-    e_type_count
-}
-
-/// <summary>
-/// General power level of Unit
-/// </summary>
-public enum UnitRarity
-{
-    e_rarity_none = -1,
-    e_rarity_COMMON,
-    e_rarity_RARE,
-    e_rarity_EPIC,
-    e_rarity_LEGEND,
-
-    e_rarity_count
-}
-
 public class UnitScript : MonoBehaviour
 {
     [Header("Stats")]
@@ -66,6 +38,10 @@ public class UnitScript : MonoBehaviour
     private
         int m_stat_wisdom = 0;
     public int wisdom { get { return m_stat_wisdom; } set { m_stat_wisdom = value; } }
+
+    private
+        Enums.UnitRarity m_rarity = Enums.UnitRarity.e_rarity_none;
+    public Enums.UnitRarity rarity { get { return m_rarity; } set { m_rarity = value; } }
 
     [Header("Flavor")]
     public string _unitName = "Jeb";
