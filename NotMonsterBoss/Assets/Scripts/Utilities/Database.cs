@@ -119,7 +119,7 @@ public class Database : MonoBehaviour{
     {
         List<RoomData> roomInfo = CSVImporter.GenerateList<RoomData> (ROOM_INFO_PATH);
         for (int i = 0; i < roomInfo.Count; i++) {
-            string roomID = roomInfo [i].name;
+            string roomID = roomInfo [i].room_name;
             roomList [roomID] = roomInfo [i];
         }
     }
