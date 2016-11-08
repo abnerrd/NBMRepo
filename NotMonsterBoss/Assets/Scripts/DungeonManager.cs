@@ -109,7 +109,6 @@ public class DungeonManager : MonoBehaviour
     void initializeDungeon()
     {
         GameObject newRoom = _roomGen.GenerateUniqueBoss ();
-        //GameObject newRoom = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs\\TestBossRoomPrefab"));
         addRoom(newRoom.GetComponent<BossRoomScript>());
     }
 
