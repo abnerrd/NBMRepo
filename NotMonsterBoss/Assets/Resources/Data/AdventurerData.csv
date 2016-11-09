@@ -2,3 +2,4 @@ NAME,DESCRIPTION,ATTACK_DAMAGE,DEX_MOD,STR_MOD,WIS_MOD,MAX_HEALTH,RARITY
 Dingus,the biggest idiot in town,0,3,5,1,1,e_rarity_COMMON
 Will,the chosen one,0,4,4,8,5,e_rarity_LEGEND
 Abner,the masterful wizard,0,5,3,5,5,e_rarity_RARE
+Malfurian,guardian of the wilds,1,4,4,5,8,e_rarity_LEGEND

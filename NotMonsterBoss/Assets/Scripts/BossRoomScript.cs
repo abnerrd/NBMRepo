@@ -39,13 +39,13 @@ public class BossRoomScript : RoomScript
     }
 
     /// Returns TRUE if Unit defeats Boss
-    public override bool challengeUnit(UnitScript unitChallenging)
-    {
-        // TODO aherrera: set Unit to FIGHT BOSS!!!!
+    //public override bool challengeUnit(UnitScript unitChallenging)
+    //{
+    //    // TODO aherrera: set Unit to FIGHT BOSS!!!!
 
 
-        return false;
-    }
+    //    return false;
+    //}
 
     public override void onFailRoom(ref AdventurerScript adventurer)
     {

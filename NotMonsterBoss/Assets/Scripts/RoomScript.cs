@@ -100,9 +100,11 @@ public class RoomScript : MonoBehaviour
     public bool challengeDexterity(float adventurerDexterity)
     {
         bool retVal = false;
+        int cr = (int)challengeRoll (adventurerDexterity);
 
-        // TODO aherrera: Implement BETTER stat adding and D&D stuff
-        if (adventurerDexterity >= m_challenge_dexterity)
+        Debug.Log ("Dexterity Challenge roll: " + cr + " / " + m_challenge_dexterity);
+
+        if ( cr >= m_challenge_dexterity)
             retVal = true;
 
         return retVal;
@@ -117,8 +119,11 @@ public class RoomScript : MonoBehaviour
     {
         bool retVal = false;
 
-        // TODO aherrera: Implement more stat adding and D&D stuff
-        if (adventurerStrength >= m_challenge_strength)
+        int cr = (int)challengeRoll (adventurerStrength);
+
+        Debug.Log ("Strength Challenge roll: " + cr + " / " + m_challenge_strength);
+
+        if (cr >= m_challenge_strength)
             retVal = true;
 
         return retVal;
@@ -133,8 +138,11 @@ public class RoomScript : MonoBehaviour
     {
         bool retVal = false;
 
-        // TODO aherrera: Implement more stat adding and D&D stuff
-        if (adventurerWisdom >= m_challenge_wisdom)
+        int cr = (int)challengeRoll (adventurerWisdom);
+
+        Debug.Log ("Wisdom Challenge roll: " + cr + " / " + m_challenge_wisdom);
+
+        if (cr >= m_challenge_wisdom)
             retVal = true;
 
         return retVal;
@@ -148,14 +156,14 @@ public class RoomScript : MonoBehaviour
         if (challengeStrength (unitChallenging.strength)) challengesPassed++;
         if (challengeWisdom (unitChallenging.wisdom)) challengesPassed++;
 
+        Debug.Log (challengesPassed + " out of 3 challenges passed!");
+
         return (challengesPassed >= m_passes_required);
     }
 
     public virtual bool challengeAdventurer(AdventurerScript adventurerChallenging)
     {
         bool retval = challengeUnit(adventurerChallenging);
-
-        // TODO aherrera: extra adventurer stuff to do? I might even take this out if it's just easier to do unit challenging..
 
         return retval;
     }
@@ -170,7 +178,7 @@ public class RoomScript : MonoBehaviour
             {
                 if(!challengeAdventurer(adventurer))
                 {
-                    Debug.Log("TODO aherrera: make determing the outcome for the Party to be more interseting");
+                    //Adventurer has lost
                     retval = false;
                     break;
                 }
@@ -188,7 +196,16 @@ public class RoomScript : MonoBehaviour
 
     public virtual void onFailRoom(ref AdventurerScript adventurer)
     {
+        Debug.Log (adventurer._unitName + " has take " + m_attack_damage + " damage!");
+
         adventurer.applyDamage(m_attack_damage);
+
+        Debug.Log (adventurer._unitName + " now has " + adventurer.currentHealth + " health");
+    }
+
+    private float challengeRoll (float mod)
+    {
+        return Random.Range((mod),(mod+10));
     }
 
 }

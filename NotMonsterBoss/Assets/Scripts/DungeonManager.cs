@@ -218,7 +218,7 @@ public class DungeonManager : MonoBehaviour
         {
             // CONDITION :: Adventurer beat room challenge
 
-            Debug.Log (packet.currentRoom.success);
+            Debug.Log (packet.adventurers[0]._unitName + " " +  packet.currentRoom.success);
 
             // TODO aherrera: update to next room and any effects that happen here!!
             updateExpeditionToNextRoom(ref packet);
@@ -227,7 +227,7 @@ public class DungeonManager : MonoBehaviour
         {
             // CONDITION :: Adventurer failed the challenge
 
-            Debug.Log (packet.currentRoom.failure);
+            Debug.Log (packet.adventurers [0]._unitName + " " + packet.currentRoom.failure);
 
             // TODO aherrera: post-mortem on what happens, and set if packet is still alive
             foreach(AdventurerScript ad in packet.adventurers)

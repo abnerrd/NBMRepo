@@ -47,42 +47,6 @@ namespace Utilities
 		}
 		#endregion
 
-		#region ObservableList Methods
-		// public static ObservableList<T> GenerateObservableList<T>(string filePath)
-		// {
-		// 	return PopulateObservableList<T>(new CSVMap(filePath));
-		// }
-		// public static ObservableList<T> GenerateObservableList<T>(TextAsset asset)
-		// {
-		// 	return PopulateObservableList<T>(new CSVMap(asset));
-		// }
-
-		// static ObservableList<T> PopulateObservableList<T>(CSVMap map)
-		// {
-		// 	ObservableList<T> list = new ObservableList<T>();
-
-		// 	bool hasInfo = false;
-		// 	int index =0;
-
-		// 	for (index = 0; index < map.Contents.Count; index++)
-		// 	{
-		// 		T obj = Activator.CreateInstance<T>();
-
-		// 		hasInfo = PopulateObject<T>(map.Contents[index], ref obj);
-
-		// 		if(hasInfo)
-		// 		{
-		// 			if(LogInfo)
-		// 				Debug.Log(obj.ToString());
-
-		// 			list.Add(obj);
-		// 		}
-		// 	}
-
-		// 	return list;
-		// }
-    	#endregion
-
 		#region Methods
 		static bool PopulateObject<T>(Dictionary<string,string> entry, ref T obj)
 		{
@@ -101,9 +65,6 @@ namespace Utilities
 				header = info.Name;
 
 				object att = System.Attribute.GetCustomAttribute(info,typeof(CSVIgnore),true);
-				//Debug.Log(att.Length);
-
-				//Debug.Log(header + " " + att);
 
 				if(att == null)
 				{

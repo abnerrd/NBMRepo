@@ -67,6 +67,7 @@ public class UnitScript : MonoBehaviour
     public void applyDamage(int dmg)
     {
         m_health_current -= dmg;
+        if (m_health_current < 0) m_health_current = 0 ;   
     }
 
 }
