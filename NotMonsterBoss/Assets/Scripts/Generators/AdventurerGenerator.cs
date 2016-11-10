@@ -9,14 +9,28 @@ using Utilities;
 /// </summary>
 public class AdventurerGenerator : MonoBehaviour
 {
+    public static AdventurerGenerator instance = null;
+
     Database dataBase;
+
+    void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
     void Start ()
     {
         dataBase = GameObject.Find ("Database").GetComponent<Database> ();
     }
 
-    public GameObject Generate (string name = "Default", string description = "Default Description", 
+    public AdventurerScript Generate (string name = "Default", string description = "Default Description", 
                                 Enums.UnitRarity rarity = Enums.UnitRarity.e_rarity_COMMON,
                                 int totalHealth =10, int dex=1, int str=1, int wis=1, int atk=0)
     {
@@ -32,7 +46,7 @@ public class AdventurerGenerator : MonoBehaviour
         adventurerScript.wisdom = wis;
         adventurerScript.attack_damage = atk;
 
-        return newAdventurer;
+        return adventurerScript;
     }
 
     public AdventurerScript GenerateUnique ()
@@ -55,7 +69,7 @@ public class AdventurerGenerator : MonoBehaviour
         return adventurerScript;
     }
 
-    public GameObject GenerateByName (string name)
+    public AdventurerScript GenerateByName (string name)
     {
         return Generate (name, "Default Description", Enums.UnitRarity.e_rarity_COMMON, 10, 1, 1, 0);
     }

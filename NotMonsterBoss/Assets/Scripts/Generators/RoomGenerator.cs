@@ -9,7 +9,21 @@ using Utilities;
 /// </summary>
 public class RoomGenerator : MonoBehaviour
 {
+    public static RoomGenerator instance = null;
+
     Database dataBase;
+
+    void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
     void Start ()
     {
@@ -40,7 +54,7 @@ public class RoomGenerator : MonoBehaviour
         return roomScript;
     }
 
-    public GameObject GenerateBoss (string name = "Default", string description = "Default Description",
+    public BossRoomScript GenerateBoss (string name = "Default", string description = "Default Description",
                                     string success = "You succeeded", string failure = "You failed",
                                     Enums.UnitRarity rarity = Enums.UnitRarity.e_rarity_COMMON,
                                     int dex = 1, int str = 1, int wis = 1, int atk = 0, int timer = 10, int passReq = 1)
@@ -64,7 +78,7 @@ public class RoomGenerator : MonoBehaviour
         roomScript.timer_frequency = timer;
         roomScript.pass_req = passReq;
 
-        return newRoom;
+        return roomScript;
     }
 
     public RoomScript GenerateUnique ()
@@ -91,7 +105,7 @@ public class RoomGenerator : MonoBehaviour
         return roomScript;
     }
 
-    public GameObject GenerateUniqueBoss ()
+    public BossRoomScript GenerateUniqueBoss ()
     {
         GameObject newRoom = new GameObject ();
         BossRoomScript roomScript = newRoom.AddComponent<BossRoomScript> ();
@@ -112,6 +126,6 @@ public class RoomGenerator : MonoBehaviour
 
         newRoom.name = roomScript.room_name + " - " + roomScript.description;
 
-        return newRoom;
+        return roomScript;
     }
 }

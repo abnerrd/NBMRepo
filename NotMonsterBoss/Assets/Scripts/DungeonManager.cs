@@ -15,6 +15,7 @@ public struct AdventurerPacket
     public string adventureTitle;
 
     public List<AdventurerScript> adventurers;
+    public int PartyCount { get { return adventurers.Count; } }
 
     // TODO aherrera: exchange this for an id? or dictionary enum? for better comparison
     public RoomScript currentRoom;
@@ -25,12 +26,13 @@ public struct AdventurerPacket
 
     public float timer;
 
-    public void initializePacket()
+    public void initializePacket(string expeditionTitle = "default")
     {
         timer = 0;
         failedExpedition = false;
         currentRoom = null;
         adventurers = new List<AdventurerScript>();
+        adventureTitle = expeditionTitle;
     }
 
     public void addAdventurerToParty(AdventurerScript adventurer)
@@ -72,7 +74,9 @@ public class DungeonManager : MonoBehaviour
     public List<RoomScript> m_roomsList;
     public int totalRooms { get { return m_roomsList.Count; } }
 
+    //  TODO aherrera : should this be private???
     public List<AdventurerPacket> m_adventurersList;
+    public int AdventurerPacketCount { get { return m_adventurersList.Count; } }
 
     GameObject _roomsParent;
 
@@ -108,8 +112,8 @@ public class DungeonManager : MonoBehaviour
 
     void initializeDungeon()
     {
-        GameObject newRoom = _roomGen.GenerateUniqueBoss ();
-        addRoom(newRoom.GetComponent<BossRoomScript>());
+        BossRoomScript newRoom = _roomGen.GenerateUniqueBoss ();
+        addRoom(newRoom);
     }
 
     
@@ -122,15 +126,32 @@ public class DungeonManager : MonoBehaviour
 
     void updateManager()
     {
+        //  TODO aherrera : is it bad to automatically remove a packet from the list as soon as it's found dead? ref packet in end of coroutine attemptRoom..?
         // Cleaning up dead packets
-        for(int i = 0; i < m_adventurersList.Count; i++)
+        for (int i = 0; i < m_adventurersList.Count; i++)
         {
             if (m_adventurersList[i].failedExpedition)
             {
+                Debug.Log("DungeonManager::updateManager -- Cleaning up dead packet: " + m_adventurersList[i].adventureTitle);
                 m_adventurersList.RemoveAt(i);
                 i--;
                 continue;
             }
+        }
+    }
+
+    /// <summary>
+    /// Removes ALL adventurers from the Dungeon.
+    /// </summary>
+    public void removeAllAdventurers()
+    {
+        //  TODO aherrera : SO packet.triggerAsFailed() doesn't actually change the boolean value? Because I think in the coroutine, we're using a reference..?
+
+        Debug.Log("DungeonManager::removeAllAdventurers");
+        foreach(AdventurerPacket packet in m_adventurersList)
+        {
+            Debug.Log("DungeonManager -- removing " + packet.adventureTitle);
+            packet.triggerAsFailed();
         }
     }
 
@@ -188,11 +209,13 @@ public class DungeonManager : MonoBehaviour
         Debug.Log ("And so begins " + expeditionTitle);
 
         AdventurerPacket newExpedition = new AdventurerPacket();
-        newExpedition.initializePacket();
+        newExpedition.initializePacket(expeditionTitle);
         foreach(AdventurerScript ad in adventureParty)
         {
             newExpedition.addAdventurerToParty(ad);
         }
+
+        m_adventurersList.Add(newExpedition);
 
         updateExpeditionToNextRoom(ref newExpedition, true);
     }
@@ -207,7 +230,16 @@ public class DungeonManager : MonoBehaviour
     {
         yield return new WaitForSeconds(packet.timer);
 
-        endRoomAttempt(ref packet);
+        //  We have this check here in case for SOME reason, outside of the coroutine, the party was obliterated.
+        //  TODO aherrera : We should avoid deleting these objects before this coroutine is finished.
+        if(!packet.failedExpedition)
+        {
+            endRoomAttempt(ref packet);
+        }
+        else
+        {
+            Debug.Log("COROUTINE attemptRoom -- time expired, but packet has already failed.");
+        }
 
     }
 
@@ -218,7 +250,12 @@ public class DungeonManager : MonoBehaviour
         {
             // CONDITION :: Adventurer beat room challenge
 
-            Debug.Log (packet.currentRoom.success);
+            string partyPreamble = "The " + packet.adventureTitle + " group";
+            if(packet.PartyCount == 1)
+            {
+                partyPreamble = packet.adventurers[0]._unitName;
+            }
+            Debug.Log (partyPreamble + " " + packet.currentRoom.success);
 
             // TODO aherrera: update to next room and any effects that happen here!!
             updateExpeditionToNextRoom(ref packet);
