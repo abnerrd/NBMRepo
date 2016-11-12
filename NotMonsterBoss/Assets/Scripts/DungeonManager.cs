@@ -244,7 +244,7 @@ public class DungeonManager : MonoBehaviour
         } else {
             // CONDITION :: Adventurer failed the challenge
 
-            Debug.Log (packet.currentRoom.failure);
+            Debug.Log (packet.adventurers[0]._unitName + " " + packet.currentRoom.failure);
 
             // TODO aherrera: post-mortem on what happens, and set if packet is still alive
             foreach (AdventurerScript ad in packet.adventurers) {
@@ -254,6 +254,9 @@ public class DungeonManager : MonoBehaviour
 
             if (packet.partyDead) {
                 packet.triggerAsFailed ();
+
+                Debug.Log ("Everyone died, the end.");
+
             } else {
 
                 // TODO aherrera: update to next room and any effects that happen here!!
