@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Utilities;
 
 /// <summary>
 /// This class uses the database to generate adventurer
@@ -23,10 +22,7 @@ public class AdventurerGenerator : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-    }
 
-    void Start ()
-    {
         dataBase = GameObject.Find ("Database").GetComponent<Database> ();
     }
 

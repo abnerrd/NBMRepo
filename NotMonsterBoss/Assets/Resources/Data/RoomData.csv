@@ -1,0 +1,10 @@
+NAME,DESCRIPTION,ATTACK_DAMAGE,PASS_REQ,CR_DEX,CR_STR,CR_WIS,COST,SUCCESS,FAILURE,IS_BOSS,RARITY,TYPE,TIMER
+the Lair of the Balrog,You shall not pass,10,2,12,9,6,100,has defeated The Balrog... for now...,has failed against the Balrog. Fly you fools...,TRUE,e_rarity_RARE,e_room_MINION,10
+a room with a trap hole,You activated my trap card....,5,1,14,6,4,75,s leaping skills are most impressive,That was a long fall... ouch,FALSE,e_rarity_COMMON,e_room_TRAP,10
+the tigers den,rawr rawr rawr rawr,4,2,11,7,10,75,has the eye of the tiger,does not have the eye of the tiger,FALSE,e_rarity_COMMON,e_room_MINION,10
+a giant corn maze,It just keeps going...,2,2,6,6,14,30,has proven superior to the corn,must be part minotaur,FALSE,e_rarity_COMMON,e_room_TRAP,10
+dungeon brewery,Come in and tell us all about it,1,3,7,7,7,50,drank them all under the table,is not gonna feel great in the morning.,FALSE,e_rarity_COMMON,e_room_MINION,10
+a room of mirrors,What is this a clown house?,3,2,8,10,3,50,is the fairest of them all,had to stop and reflect on his adventure,FALSE,e_rarity_RARE,e_room_TRAP,10
+the Boogie Mans Casino,Well well well what have we here?,4,3,8,8,8,100,is the only pumpkin king,gambled and lost,TRUE,e_rarity_RARE,e_room_MINION,10
+the web of the Spider Queen,It's all sticky...,6,2,15,8,6,110,has evaded the sticky situation,got all tied up,TRUE,e_rarity_COMMON,e_room_MINION,10
+a garbage compactor,One things for sure were all gunna be a lot thinner,5,2,12,7,4,75,used the force,has flat out failed,FALSE,e_rarity_COMMON,e_room_TRAP,10

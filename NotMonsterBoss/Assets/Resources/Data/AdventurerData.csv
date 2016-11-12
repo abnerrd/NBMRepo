@@ -1,0 +1,26 @@
+NAME,DESCRIPTION,ATTACK_DAMAGE,DEX_MOD,STR_MOD,WIS_MOD,MAX_HEALTH,RARITY
+Dingus,the biggest idiot in town,0,3,5,1,1,e_rarity_COMMON
+Will,the chosen one,0,4,4,8,5,e_rarity_LEGEND
+Abner,the masterful wizard,0,5,3,5,5,e_rarity_RARE
+Malfurian,guardian of the wilds,1,4,4,5,8,e_rarity_LEGEND
+Flik,the local underdog,4,2,2,3,5,e_rarity_RARE
+Alegin,the fiery apothecary,1,1,1,4,6,e_rarity_COMMON
+Horgoth,the angsty raider,3,3,4,2,4,e_rarity_RARE
+Beet,the mischivious handboy,2,4,3,2,4,e_rarity_COMMON
+Renba,the negawizard,4,6,4,4,4,e_rarity_EPIC
+Dangus,the luckiest clutz,3,3,3,3,3,e_rarity_EPIC
+Nalla,the mountineer,4,2,4,3,5,e_rarity_RARE
+Judith,the team player,2,4,4,2,4,e_rarity_EPIC
+Keron,the greatest inspiration,3,5,3,4,2,e_rarity_EPIC
+Edith,the valiant priestess,2,4,2,5,4,e_rarity_RARE
+Urosh,the violent sore loser,5,3,4,1,6,e_rarity_RARE
+Ekele,the shadow image,3,4,2,2,3,e_rarity_RARE
+Vernin,the strongest pixie,4,2,4,1,4,e_rarity_COMMON
+Dallos,the aspiring hero,1,3,2,2,3,e_rarity_COMMON
+Albi,the racist dragon,2,2,5,2,10,e_rarity_EPIC
+Maxine,the dramatic archer,1,4,1,2,2,e_rarity_COMMON
+Frisk,the determined,1,2,1,2,3,e_rarity_EPIC
+Action Earl,the man in action,2,3,2,1,4,e_rarity_COMMON
+Kuth,maiden of Orollos,1,3,1,3,2,e_rarity_COMMON
+Grolen,hero of Orollos,3,2,3,2,4,e_rarity_RARE
+Krot Azxra,the devourer of maidens,2,1,3,1,4,e_rarity_RARE

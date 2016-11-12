@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Utilities;
+
 
 /// <summary>
 /// This class uses the database to generate room
@@ -23,10 +23,8 @@ public class RoomGenerator : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-    }
 
-    void Start ()
-    {
+
         dataBase = GameObject.Find ("Database").GetComponent<Database> ();
     }
 
@@ -105,7 +103,7 @@ public class RoomGenerator : MonoBehaviour
         return roomScript;
     }
 
-    public BossRoomScript GenerateUniqueBoss ()
+    public GameObject GenerateUniqueBoss ()
     {
         GameObject newRoom = new GameObject ();
         BossRoomScript roomScript = newRoom.AddComponent<BossRoomScript> ();
@@ -126,6 +124,6 @@ public class RoomGenerator : MonoBehaviour
 
         newRoom.name = roomScript.room_name + " - " + roomScript.description;
 
-        return roomScript;
+        return newRoom;
     }
 }

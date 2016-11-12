@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 using Utilities;
 
-
 /// <summary>
 /// This class loads in all csv files specified
 /// It stores each entry in respective dictionaries

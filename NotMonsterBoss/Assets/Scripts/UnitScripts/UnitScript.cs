@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Utilities;
 
 /// <summary>
 // Base Unit Script for entities
