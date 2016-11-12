@@ -10,58 +10,6 @@ using System.Collections.Generic;
  * Has a list of Rooms
  */
 
-public struct AdventurerPacket
-{
-    public string adventureTitle;
-
-    public List<AdventurerScript> adventurers;
-    public int PartyCount { get { return adventurers.Count; } }
-
-    // TODO aherrera: exchange this for an id? or dictionary enum? for better comparison
-    public RoomScript currentRoom;
-
-    public bool failedExpedition;
-
-    public void triggerAsFailed () { failedExpedition = true; }
-
-    public float timer;
-
-    public void initializePacket (string expeditionTitle = "default")
-    {
-        timer = 0;
-        failedExpedition = false;
-        currentRoom = null;
-        adventurers = new List<AdventurerScript> ();
-        adventureTitle = expeditionTitle;
-    }
-
-    public void addAdventurerToParty (AdventurerScript adventurer)
-    {
-        adventurers.Add (adventurer);
-    }
-
-    public bool setTimerToCurrentRoom ()
-    {
-        if (currentRoom != null) {
-            timer = currentRoom.timer_frequency;
-        }
-
-        return false;
-    }
-
-    public bool partyDead {
-        get {
-            foreach (AdventurerScript ad in adventurers) {
-                if (!ad.isDead) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-    }
-}
-
 
 public class DungeonManager : MonoBehaviour
 {
@@ -119,6 +67,12 @@ public class DungeonManager : MonoBehaviour
         updateManager ();
     }
 
+    void FixedUpdate()
+    {
+        //  TODO aherrera : Should this manager be responsible for Updating them, or should they Update on their own..?
+        UpdatePackets();
+    }
+
     void updateManager ()
     {
         //  TODO aherrera : is it bad to automatically remove a packet from the list as soon as it's found dead? ref packet in end of coroutine attemptRoom..?
@@ -131,6 +85,17 @@ public class DungeonManager : MonoBehaviour
                 continue;
             }
         }
+    }
+
+    //  TODO aherrera : this will come more into play when we figure out how to save & serialize data
+    /// <summary>
+    /// This function resolves, resumes, and basically "catches up" all the AdventurerPackets when this
+    /// game is reopened.
+    /// Depends heavily on timestamps
+    /// </summary>
+    void OnResumeDungeon()
+    {
+        //  TODO aherrera : check if this is indeed a dungeon that isn't "new" (new game?) condition
     }
 
     /// <summary>
@@ -151,18 +116,21 @@ public class DungeonManager : MonoBehaviour
     /// Update an adventurer to the next room in this expedition.
     /// </summary>
     /// <param name="expedition"></param>           
-    void updateExpeditionToNextRoom (ref AdventurerPacket expedition, bool toEntrance = false)//, int nextRoomIndex = -1);
+    void updateExpeditionToNextRoom (AdventurerPacket expedition, bool toEntrance = false)//, int nextRoomIndex = -1);
     {
         int index = (expedition.currentRoom != null ? m_roomsList.IndexOf (expedition.currentRoom) : 99);
         index--;
 
-        if (index < 0 && !expedition.partyDead) {
+        if (index < 0 && !expedition.PartyDead)
+        {
             // TODO aherrera: Adventurer wins! Churn out data and do appropriate stuff
             Debug.Log ("Adventurer wins...?");
-        } else {
+        }
+        else
+        {
             expedition.currentRoom = (toEntrance ? getDungeonEntrance () : m_roomsList [index]);
-            expedition.setTimerToCurrentRoom ();
-            StartCoroutine (attemptRoom (expedition));
+            //StartCoroutine (attemptRoom (expedition));    //  11/12 - previous "Start packet"
+            expedition.StartPacket();
             Debug.Log (expedition.adventurers [0]._unitName + " has now entered " + expedition.currentRoom.room_name);
         }
     }
@@ -196,7 +164,9 @@ public class DungeonManager : MonoBehaviour
     {
         Debug.Log ("And so begins " + expeditionTitle);
 
-        AdventurerPacket newExpedition = new AdventurerPacket ();
+        //  TODO aherrera : remove the AdventurerPacket as a GameObject -- only set like that for Editting/Debugging purposes
+        GameObject dumb_pack = new GameObject();
+        AdventurerPacket newExpedition = dumb_pack.AddComponent<AdventurerPacket>();
         newExpedition.initializePacket (expeditionTitle);
         foreach (AdventurerScript ad in adventureParty) {
             newExpedition.addAdventurerToParty (ad);
@@ -204,7 +174,7 @@ public class DungeonManager : MonoBehaviour
 
         m_adventurersList.Add (newExpedition);
 
-        updateExpeditionToNextRoom (ref newExpedition, true);
+        updateExpeditionToNextRoom (newExpedition, true);
     }
 
     // Returns the RoomScript at the end of the list -- m_roomsList[0] == BOSSROOM
@@ -213,22 +183,65 @@ public class DungeonManager : MonoBehaviour
         return m_roomsList [m_roomsList.Count - 1];
     }
 
-    IEnumerator attemptRoom (AdventurerPacket packet)
+    #region Previous Coroutine version for "UpdatePacket"
+    //IEnumerator attemptRoom (AdventurerPacket packet)
+    //{
+    //    yield return new WaitForSeconds (packet.timer);
+
+    //    //  We have this check here in case for SOME reason, outside of the coroutine, the party was obliterated.
+    //    //  TODO aherrera : We should avoid deleting these objects before this coroutine is finished.
+    //    if (!packet.failedExpedition) {
+    //        endRoomAttempt (ref packet);
+    //    } else {
+    //        Debug.Log ("COROUTINE attemptRoom -- time expired, but packet has already failed.");
+    //    }
+    //}
+    #endregion
+
+    void UpdatePackets()
     {
-        yield return new WaitForSeconds (packet.timer);
 
-        //  We have this check here in case for SOME reason, outside of the coroutine, the party was obliterated.
-        //  TODO aherrera : We should avoid deleting these objects before this coroutine is finished.
-        if (!packet.failedExpedition) {
-            endRoomAttempt (ref packet);
-        } else {
-            Debug.Log ("COROUTINE attemptRoom -- time expired, but packet has already failed.");
+        foreach(AdventurerPacket packet in m_adventurersList)
+        {
+            packet.UpdatePacket();
+
+            if(packet.TimerComplete)
+            {
+                if(!packet.PacketCompleteAcknowledged)
+                {
+                    //  We have this check here in case for SOME reason, outside of the coroutine, the party was obliterated.
+                    //  TODO aherrera : We should avoid deleting these objects before this coroutine is finished.
+                    if (!packet.failedExpedition)
+                    {
+                        endRoomAttempt(packet);
+                    }
+                    else
+                    {
+                        Debug.Log("COROUTINE attemptRoom -- time expired, but packet has already failed.");
+                    }
+                }
+                packet.PacketCompleteAcknowledged = true;
+
+                if (packet.PartyDead)
+                {
+                    packet.triggerAsFailed();
+
+                    Debug.Log("Everyone died, the end.");
+
+                }
+                else
+                {
+                    // TODO aherrera: update to next room and any effects that happen here!!
+                    updateExpeditionToNextRoom(packet);
+                }
+
+            }
         }
-
     }
 
+
     // update the packet with the results
-    private void endRoomAttempt (ref AdventurerPacket packet)
+    private void endRoomAttempt (AdventurerPacket packet)
     {
         if (packet.currentRoom.challengeParty (packet.adventurers)) {
             // CONDITION :: Adventurer beat room challenge
@@ -240,7 +253,7 @@ public class DungeonManager : MonoBehaviour
             Debug.Log (partyPreamble + " " + packet.currentRoom.success);
 
             // TODO aherrera: update to next room and any effects that happen here!!
-            updateExpeditionToNextRoom (ref packet);
+            updateExpeditionToNextRoom (packet);
         } else {
             // CONDITION :: Adventurer failed the challenge
 
@@ -252,16 +265,7 @@ public class DungeonManager : MonoBehaviour
                 packet.currentRoom.onFailRoom (ref finn);
             }
 
-            if (packet.partyDead) {
-                packet.triggerAsFailed ();
-
-                Debug.Log ("Everyone died, the end.");
-
-            } else {
-
-                // TODO aherrera: update to next room and any effects that happen here!!
-                updateExpeditionToNextRoom (ref packet);
-            }
+            
 
         }
     }
