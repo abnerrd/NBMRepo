@@ -46,5 +46,14 @@ public static class Enums {
 
         e_room_count
     }
+
+    public enum ChallengeType
+    {
+        e_challenge_DEX,
+        e_challenge_STR,
+        e_challenge_WIS,
+
+        e_challenge_count
+    }
     #endregion
 }

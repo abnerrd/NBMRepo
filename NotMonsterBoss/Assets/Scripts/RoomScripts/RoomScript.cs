@@ -101,7 +101,7 @@ public class RoomScript : MonoBehaviour
         bool retVal = false;
         int cr = (int)challengeRoll (adventurerDexterity);
 
-        Debug.Log ("Dexterity Challenge roll: " + cr + " / " + m_challenge_dexterity);
+        DebugLogger.DebugChallenge (cr, m_challenge_dexterity, Enums.ChallengeType.e_challenge_DEX);
 
         if (cr >= m_challenge_dexterity)
             retVal = true;
@@ -120,7 +120,7 @@ public class RoomScript : MonoBehaviour
 
         int cr = (int)challengeRoll (adventurerStrength);
 
-        Debug.Log ("Strength Challenge roll: " + cr + " / " + m_challenge_strength);
+        DebugLogger.DebugChallenge (cr, m_challenge_strength, Enums.ChallengeType.e_challenge_STR);
 
         if (cr >= m_challenge_strength)
             retVal = true;
@@ -139,7 +139,7 @@ public class RoomScript : MonoBehaviour
 
         int cr = (int)challengeRoll (adventurerWisdom);
 
-        Debug.Log ("Wisdom Challenge roll: " + cr + " / " + m_challenge_wisdom);
+        DebugLogger.DebugChallenge (cr, m_challenge_wisdom, Enums.ChallengeType.e_challenge_WIS);
 
         if (cr >= m_challenge_wisdom)
             retVal = true;
@@ -155,7 +155,7 @@ public class RoomScript : MonoBehaviour
         if (challengeStrength (unitChallenging.strength)) challengesPassed++;
         if (challengeWisdom (unitChallenging.wisdom)) challengesPassed++;
 
-        Debug.Log (challengesPassed + " out of 3 challenges passed!");
+        DebugLogger.DebugRoomResult (challengesPassed, m_passes_required, this, unitChallenging);
 
         return (challengesPassed >= m_passes_required);
     }
@@ -192,11 +192,8 @@ public class RoomScript : MonoBehaviour
 
     public virtual void onFailRoom (ref AdventurerScript adventurer)
     {
-        Debug.Log (adventurer._unitName + " has take " + m_attack_damage + " damage!");
-
         adventurer.applyDamage (m_attack_damage);
-
-        Debug.Log (adventurer._unitName + " now has " + adventurer.currentHealth + " health");
+        DebugLogger.DebugUnitDamage (m_attack_damage, adventurer);
     }
 
     private float challengeRoll (float mod)

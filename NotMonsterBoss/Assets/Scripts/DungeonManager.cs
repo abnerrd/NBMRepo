@@ -79,7 +79,7 @@ public class DungeonManager : MonoBehaviour
         // Cleaning up dead packets
         for (int i = 0; i < m_adventurersList.Count; i++) {
             if (m_adventurersList [i].failedExpedition) {
-                Debug.Log ("DungeonManager::updateManager -- Cleaning up dead packet: " + m_adventurersList [i].adventureTitle);
+                DebugLogger.DebugSystemMessage ("DungeonManager::updateManager -- Cleaning up dead packet: " + m_adventurersList [i].adventureTitle);
                 m_adventurersList.RemoveAt (i);
                 i--;
                 continue;
@@ -107,7 +107,7 @@ public class DungeonManager : MonoBehaviour
 
         Debug.Log ("DungeonManager::removeAllAdventurers");
         foreach (AdventurerPacket packet in m_adventurersList) {
-            Debug.Log ("DungeonManager -- removing " + packet.adventureTitle);
+            DebugLogger.DebugSystemMessage ("DungeonManager -- removing " + packet.adventureTitle);
             packet.triggerAsFailed ();
         }
     }
@@ -131,7 +131,7 @@ public class DungeonManager : MonoBehaviour
             expedition.currentRoom = (toEntrance ? getDungeonEntrance () : m_roomsList [index]);
             //StartCoroutine (attemptRoom (expedition));    //  11/12 - previous "Start packet"
             expedition.StartPacket();
-            Debug.Log (expedition.adventurers [0]._unitName + " has now entered " + expedition.currentRoom.room_name);
+            DebugLogger.DebugRoomTransition (expedition.currentRoom, expedition.adventurers [0]);
         }
     }
 
@@ -217,7 +217,7 @@ public class DungeonManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("COROUTINE attemptRoom -- time expired, but packet has already failed.");
+                        DebugLogger.DebugSystemMessage("COROUTINE attemptRoom -- time expired, but packet has already failed.");
                     }
                 }
                 packet.PacketCompleteAcknowledged = true;
@@ -250,14 +250,11 @@ public class DungeonManager : MonoBehaviour
             if (packet.PartyCount == 1) {
                 partyPreamble = packet.adventurers [0]._unitName;
             }
-            Debug.Log (partyPreamble + " " + packet.currentRoom.success);
 
             // TODO aherrera: update to next room and any effects that happen here!!
             updateExpeditionToNextRoom (packet);
         } else {
             // CONDITION :: Adventurer failed the challenge
-
-            Debug.Log (packet.adventurers[0]._unitName + " " + packet.currentRoom.failure);
 
             // TODO aherrera: post-mortem on what happens, and set if packet is still alive
             foreach (AdventurerScript ad in packet.adventurers) {
