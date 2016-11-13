@@ -31,12 +31,12 @@ public class BossRoomScript : RoomScript
         return bossReference.boss_name;
     }
 
-    public override bool challengeAdventurer (AdventurerScript adventurerChallenging)
-    {
-        bool retval = challengeUnit (adventurerChallenging);
+    //public override bool challengeAdventurer (AdventurerScript adventurerChallenging)
+    //{
+    //    bool retval = challengeUnit (adventurerChallenging);
 
-        return retval;
-    }
+    //    return retval;
+    //}
 
     /// Returns TRUE if Unit defeats Boss
     //public override bool challengeUnit(UnitScript unitChallenging)
@@ -47,8 +47,8 @@ public class BossRoomScript : RoomScript
     //    return false;
     //}
 
-    public override void onFailRoom (ref AdventurerScript adventurer)
-    {
-        // Apply BOSS dmg here
-    }
+    //public override void onFailRoom (ref AdventurerScript adventurer)
+    //{
+    //    // Apply BOSS dmg here
+    //}
 }

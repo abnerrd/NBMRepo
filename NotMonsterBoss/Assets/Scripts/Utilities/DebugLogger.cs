@@ -69,29 +69,17 @@ public class DebugLogger
         Debug.Log (message.Colored (Colors.purple));
     }
 
-    //public static void DebugMissedAttack (Creature attacker, Creature defender)
-    //{
-    //    string actionLabel = "MISSED ATTACK: ";
-    //    string message = (attacker.GetID () + " missed an attack against "
-    //        + defender.GetID ());
-
-    //    Debug.Log (actionLabel.Bold ().Sized (12).Colored (Colors.aqua) + " " + message.Sized (10));
-    //}
+    public static void DebugGameObver ()
+    {
+        Debug.Log (("Everyone died. The End").Bold().Colored(Colors.red));
+    }
 
 
-    //public static void DebugHP (Creature creature)
-    //{
-    //    string actionLabel = "HP Update: ";
-    //    string message_1 = creature.GetID () + " has ";
-    //    string message_2 = " hit points remaining!";
-    //    string creatureHP = creature.GetHP ().ToString ();
-    //    int max = creature.GetMAXHP ();
-    //    int current = creature.GetHP ();
 
-    //    if (current > (max * 0.75)) Debug.Log (actionLabel.Bold ().Sized (12).Colored (Colors.green) + " " + message_1.Sized (10) + creatureHP.Colored (Colors.green) + message_2);
-    //    else if (current <= (max * 0.75) && current > (max * 0.25)) Debug.Log (actionLabel.Bold ().Sized (12).Colored (Colors.green) + " " + message_1.Sized (10) + creatureHP.Colored (Colors.yellow) + message_2);
-    //    else Debug.Log (actionLabel.Bold ().Sized (12).Colored (Colors.green) + " " + message_1.Sized (10) + creatureHP.Colored (Colors.red) + message_2);
-    //}
+
+
+
+    //Unused
 
     public static void DebugTimeStep (float num, string step)
     {

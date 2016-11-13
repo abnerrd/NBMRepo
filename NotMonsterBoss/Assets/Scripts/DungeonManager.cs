@@ -226,7 +226,7 @@ public class DungeonManager : MonoBehaviour
                 {
                     packet.triggerAsFailed();
 
-                    Debug.Log("Everyone died, the end.");
+                    DebugLogger.DebugGameObver ();
 
                 }
                 else
