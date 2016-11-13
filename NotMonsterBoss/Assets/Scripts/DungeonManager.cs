@@ -78,8 +78,8 @@ public class DungeonManager : MonoBehaviour
         //  TODO aherrera : is it bad to automatically remove a packet from the list as soon as it's found dead? ref packet in end of coroutine attemptRoom..?
         // Cleaning up dead packets
         for (int i = 0; i < m_adventurersList.Count; i++) {
-            if (m_adventurersList [i].failedExpedition) {
-                DebugLogger.DebugSystemMessage ("DungeonManager::updateManager -- Cleaning up dead packet: " + m_adventurersList [i].adventureTitle);
+            if (m_adventurersList [i].State != AdventurerPacket.PacketState.PARTY_IN_PROGRESS) {
+                DebugLogger.DebugSystemMessage ("DungeonManager::updateManager -- Cleaning up " + m_adventurersList[i].State.ToString() + " packet: " + m_adventurersList [i].adventureTitle);
                 m_adventurersList.RemoveAt (i);
                 i--;
                 continue;
@@ -103,12 +103,10 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     public void removeAllAdventurers ()
     {
-        //  TODO aherrera : SO packet.triggerAsFailed() doesn't actually change the boolean value? Because I think in the coroutine, we're using a reference..?
-
         Debug.Log ("DungeonManager::removeAllAdventurers");
         foreach (AdventurerPacket packet in m_adventurersList) {
             DebugLogger.DebugSystemMessage ("DungeonManager -- removing " + packet.adventureTitle);
-            packet.triggerAsFailed ();
+            packet.SetPacketFailure ();
         }
     }
 
@@ -125,6 +123,7 @@ public class DungeonManager : MonoBehaviour
         {
             // TODO aherrera: Adventurer wins! Churn out data and do appropriate stuff
             Debug.Log ("Adventurer wins...?");
+            expedition.SetPacketSuccess();
         }
         else
         {
@@ -209,29 +208,26 @@ public class DungeonManager : MonoBehaviour
             {
                 if(!packet.PacketCompleteAcknowledged)
                 {
-                    //  We have this check here in case for SOME reason, outside of the coroutine, the party was obliterated.
-                    //  TODO aherrera : We should avoid deleting these objects before this coroutine is finished.
-                    if (!packet.failedExpedition)
+                    if (packet.State == AdventurerPacket.PacketState.PARTY_IN_PROGRESS)
                     {
                         endRoomAttempt(packet);
                     }
                     else
                     {
-                        DebugLogger.DebugSystemMessage("COROUTINE attemptRoom -- time expired, but packet has already failed.");
+                        DebugLogger.DebugSystemMessage("DungeonManager::UpdatePackets -- time expired, but packet state is " + packet.State.ToString());
                     }
                 }
                 packet.PacketCompleteAcknowledged = true;
 
+
+                //  Update packets to next step
                 if (packet.PartyDead)
                 {
-                    packet.triggerAsFailed();
-
+                    packet.SetPacketFailure();
                     DebugLogger.DebugGameObver ();
-
                 }
                 else
                 {
-                    // TODO aherrera: update to next room and any effects that happen here!!
                     updateExpeditionToNextRoom(packet);
                 }
 
@@ -243,26 +239,31 @@ public class DungeonManager : MonoBehaviour
     // update the packet with the results
     private void endRoomAttempt (AdventurerPacket packet)
     {
-        if (packet.currentRoom.challengeParty (packet.adventurers)) {
+        if (packet.currentRoom.challengeParty (packet.adventurers))
+        {
             // CONDITION :: Adventurer beat room challenge
 
             string partyPreamble = "The " + packet.adventureTitle + " group";
-            if (packet.PartyCount == 1) {
+            if (packet.PartyCount == 1)
+            {
                 partyPreamble = packet.adventurers [0]._unitName;
             }
 
-            // TODO aherrera: update to next room and any effects that happen here!!
-            updateExpeditionToNextRoom (packet);
-        } else {
-            // CONDITION :: Adventurer failed the challenge
+            //  TODO aherrera : onPacketRoomChallengeSuccess
+        }
+        else
+        {
+            // CONDITION :: Packet failed the challenge
 
             // TODO aherrera: post-mortem on what happens, and set if packet is still alive
-            foreach (AdventurerScript ad in packet.adventurers) {
+            foreach (AdventurerScript ad in packet.adventurers)
+            {
                 AdventurerScript finn = ad;
                 packet.currentRoom.onFailRoom (ref finn);
             }
 
-            
+            // TODO aherrera : onPacketRoomChallengeFail
+
 
         }
     }

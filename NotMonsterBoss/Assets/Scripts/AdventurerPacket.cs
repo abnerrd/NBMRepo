@@ -32,12 +32,17 @@ public class AdventurerPacket : MonoBehaviour
         }
     }
 
+    public enum PacketState
+    {
+        PARTY_IN_PROGRESS,
+        PARTY_FAILED,
+        PARTY_SUCCESS
+    }
+    protected PacketState m_state;
+    public PacketState State { get { return m_state; } }
+
     // TODO aherrera: exchange this for an id? or dictionary enum? for better comparison
     public RoomScript currentRoom;
-
-    public bool failedExpedition;
-
-    public void triggerAsFailed() { failedExpedition = true; }
 
     public float timer;
     //  TODO aherrera : Temp variable for now.. well, maybe not tbh.
@@ -69,7 +74,7 @@ public class AdventurerPacket : MonoBehaviour
     public void initializePacket(string expeditionTitle = "default")
     {
         timer = 0;
-        failedExpedition = false;
+        m_state = PacketState.PARTY_IN_PROGRESS;
         currentRoom = null;
         adventurers = new List<AdventurerScript>();
         adventureTitle = expeditionTitle;
@@ -108,6 +113,19 @@ public class AdventurerPacket : MonoBehaviour
         return retVal;
     }
 
+    public void SetPacketSuccess()
+    {
+        m_state = PacketState.PARTY_SUCCESS;
+
+        //  TODO aherrera : reward all Adventurers who survived -- maybe put some in a "history"? Legends, memorial, etc.
+    }
+
+    public void SetPacketFailure()
+    {
+        m_state = PacketState.PARTY_FAILED;
+
+        //  TODO aherrera : is there any more punishment after death?
+    }
 
     
 }
