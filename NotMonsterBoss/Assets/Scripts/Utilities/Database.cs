@@ -17,10 +17,13 @@ public class Database : MonoBehaviour{
 	const string ADVENTURER_INFO_PATH = "Assets/Resources/Data/AdventurerData.csv";
     //Path to the CSV containing all room info
     const string ROOM_INFO_PATH = "Assets/Resources/Data/RoomData.csv";
+    //Path to the CSV containing all name info
+    const string NAME_INFO_PATH = "Assets/Resources/Data/NameData.csv";
     #endregion
 
     Dictionary<string, AdventurerData> adventurerList;
     Dictionary<string, RoomData> roomList;
+    Dictionary<string, NameData> nameList;
 
     #region Adventurers
     public AdventurerData GetAdventurerByName(string name){
@@ -96,14 +99,24 @@ public class Database : MonoBehaviour{
     }
     #endregion
 
+    #region Names
+    public NameData GetRandomName ()
+    {
+        List<string> keys = new List<string> (nameList.Keys);
+        string randomKey = keys [Random.Range (0, nameList.Count)];
+        return nameList [randomKey];
+    }
+    #endregion
 
 
 
 	void Awake () {
         adventurerList = new Dictionary<string, AdventurerData> ();
         roomList = new Dictionary<string, RoomData> ();
+        nameList = new Dictionary<string, NameData> ();
 		LoadAdventurers ();
         LoadRooms ();
+        LoadNames ();
 	}
 
     #region Loading
@@ -120,6 +133,14 @@ public class Database : MonoBehaviour{
         for (int i = 0; i < roomInfo.Count; i++) {
             string roomID = roomInfo [i].room_name;
             roomList [roomID] = roomInfo [i];
+        }
+    }
+    void LoadNames ()
+    {
+        List<NameData> nameInfo = CSVImporter.GenerateList<NameData> (NAME_INFO_PATH);
+        for (int i = 0; i < nameInfo.Count; i++) {
+            string nameID = nameInfo [i].title;
+            nameList [nameID] = nameInfo [i];
         }
     }
     #endregion

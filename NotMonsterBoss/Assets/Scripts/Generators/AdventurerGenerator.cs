@@ -28,7 +28,7 @@ public class AdventurerGenerator : MonoBehaviour
 
     public AdventurerScript Generate (string name = "Default", string description = "Default Description", 
                                 Enums.UnitRarity rarity = Enums.UnitRarity.e_rarity_COMMON,
-                                int totalHealth =10, int dex=1, int str=1, int wis=1, int atk=0)
+                                int totalHealth =10, int dex=1, int str=1, int wis=1, int atk=0, int level=1)
     {
         GameObject newAdventurer = new GameObject ();
         AdventurerScript adventurerScript = newAdventurer.AddComponent<AdventurerScript> ();
@@ -41,9 +41,65 @@ public class AdventurerGenerator : MonoBehaviour
         adventurerScript.strength = str;
         adventurerScript.wisdom = wis;
         adventurerScript.attack_damage = atk;
+        adventurerScript.level = level;
 
         return adventurerScript;
     }
+
+    public AdventurerScript GenerateRandom (int level, Enums.UnitRarity rarity)
+    {
+        GameObject newAdventurer = new GameObject ();
+        AdventurerScript adventurerScript = newAdventurer.AddComponent<AdventurerScript> ();
+
+        NameData name = dataBase.GetRandomName ();
+
+        adventurerScript._unitName = name.title;
+        adventurerScript._unitDescription = name.subtitle;
+        adventurerScript._unitNameDelim = (name.delimiter == "/" ? ", " : " ");
+
+        int statMod = 0,
+            healthMod = 0;
+        float statMult = 1.0f,
+              healthMult = 1.0f;
+
+        statMod += level;
+        healthMod += level * 5;
+
+        switch (rarity) 
+        {
+            case Enums.UnitRarity.e_rarity_RARE:
+            statMult = 1.1f;
+            healthMult = 1.1f;
+            break;
+        case Enums.UnitRarity.e_rarity_EPIC:
+            statMult = 1.3f;
+            healthMult = 1.3f;
+            break;
+        case Enums.UnitRarity.e_rarity_LEGEND:
+            statMult = 1.5f;
+            healthMult = 1.5f;
+            break;
+        }
+
+
+
+        adventurerScript.totalHealth = (int)(Random.Range(healthMod, healthMod+healthMod) * healthMult);
+        adventurerScript.dexterity = (int)(Random.Range (statMod, statMod + statMod) * statMult);
+        adventurerScript.strength = (int)(Random.Range (statMod, statMod + statMod) * statMult);
+        adventurerScript.wisdom = (int)(Random.Range (statMod, statMod + statMod) * statMult);
+        adventurerScript.attack_damage = (int)(Random.Range (statMod, statMod + statMod) * statMult);
+
+        adventurerScript.rarity = rarity;
+        adventurerScript.level = level;
+        adventurerScript.currentHealth = adventurerScript.totalHealth;
+
+
+        newAdventurer.name = adventurerScript._unitName + adventurerScript._unitNameDelim + adventurerScript._unitDescription;
+
+        return adventurerScript;
+    }
+
+
 
     public AdventurerScript GenerateUnique ()
     {
@@ -67,6 +123,6 @@ public class AdventurerGenerator : MonoBehaviour
 
     public AdventurerScript GenerateByName (string name)
     {
-        return Generate (name, "Default Description", Enums.UnitRarity.e_rarity_COMMON, 10, 1, 1, 0);
+        return Generate (name, "Default Description", Enums.UnitRarity.e_rarity_COMMON, 10, 1, 1, 0, 1);
     }
 }

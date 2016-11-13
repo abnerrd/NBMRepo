@@ -18,6 +18,11 @@ public class UnitScript : MonoBehaviour
     public int totalHealth { get { return m_health_total; } set { m_health_total = value; } }
 
     [SerializeField]
+    private
+        int m_level = 1;
+    public int level { get { return m_level; } set { m_level = value; } }
+
+    [SerializeField]
     [Tooltip("Flat damage to other Units")]
     private
         int m_attack_damage = 0;
@@ -44,6 +49,7 @@ public class UnitScript : MonoBehaviour
 
     [Header("Flavor")]
     public string _unitName = "Jeb";
+    public string _unitNameDelim = " ";
     public string _unitDescription = "Lowly minion.";
 
     void Awake()
