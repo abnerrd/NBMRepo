@@ -26,12 +26,12 @@ public class AdventurerGenerator : MonoBehaviour
         dataBase = GameObject.Find ("Database").GetComponent<Database> ();
     }
 
-    public AdventurerScript Generate (string name = "Default", string description = "Default Description", 
+    public AdventurerModel Generate (string name = "Default", string description = "Default Description", 
                                 Enums.UnitRarity rarity = Enums.UnitRarity.e_rarity_COMMON,
                                 int totalHealth =10, int dex=1, int str=1, int wis=1, int atk=0, int level=1)
     {
         GameObject newAdventurer = new GameObject ();
-        AdventurerScript adventurerScript = newAdventurer.AddComponent<AdventurerScript> ();
+        AdventurerModel adventurerScript = newAdventurer.AddComponent<AdventurerModel> ();
 
         adventurerScript._unitName = name;
         adventurerScript._unitDescription = description;
@@ -46,10 +46,10 @@ public class AdventurerGenerator : MonoBehaviour
         return adventurerScript;
     }
 
-    public AdventurerScript GenerateRandom (int level, Enums.UnitRarity rarity)
+    public AdventurerModel GenerateRandom (int level, Enums.UnitRarity rarity)
     {
         GameObject newAdventurer = new GameObject ();
-        AdventurerScript adventurerScript = newAdventurer.AddComponent<AdventurerScript> ();
+        AdventurerModel adventurerScript = newAdventurer.AddComponent<AdventurerModel> ();
 
         NameData name = dataBase.GetRandomName ();
 
@@ -101,10 +101,10 @@ public class AdventurerGenerator : MonoBehaviour
 
 
 
-    public AdventurerScript GenerateUnique ()
+    public AdventurerModel GenerateUnique ()
     {
         GameObject newAdventurer = new GameObject ();
-        AdventurerScript adventurerScript = newAdventurer.AddComponent<AdventurerScript> ();
+        AdventurerModel adventurerScript = newAdventurer.AddComponent<AdventurerModel> ();
         AdventurerData adventurerData = dataBase.GetRandomAdventurer ();
 
         adventurerScript._unitName = adventurerData.name;
@@ -121,7 +121,7 @@ public class AdventurerGenerator : MonoBehaviour
         return adventurerScript;
     }
 
-    public AdventurerScript GenerateByName (string name)
+    public AdventurerModel GenerateByName (string name)
     {
         return Generate (name, "Default Description", Enums.UnitRarity.e_rarity_COMMON, 10, 1, 1, 0, 1);
     }

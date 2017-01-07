@@ -160,18 +160,18 @@ public class RoomScript : MonoBehaviour
         return (challengesPassed >= m_passes_required);
     }
 
-    public virtual bool challengeAdventurer (AdventurerScript adventurerChallenging)
+    public virtual bool challengeAdventurer (AdventurerModel adventurerChallenging)
     {
         bool retval = challengeUnit (adventurerChallenging);
 
         return retval;
     }
 
-    public virtual bool challengeParty (List<AdventurerScript> adventureParty)
+    public virtual bool challengeParty (List<AdventurerModel> adventureParty)
     {
         bool retval = true;
 
-        foreach (AdventurerScript adventurer in adventureParty) {
+        foreach (AdventurerModel adventurer in adventureParty) {
             if (!adventurer.isDead) {
                 if (!challengeAdventurer (adventurer)) {
                     //Adventurer has lost
@@ -190,7 +190,7 @@ public class RoomScript : MonoBehaviour
         m_challenge_dexterity = m_challenge_strength = m_challenge_wisdom = m_attack_damage = 0;
     }
 
-    public virtual void onFailRoom (ref AdventurerScript adventurer)
+    public virtual void onFailRoom (ref AdventurerModel adventurer)
     {
         adventurer.applyDamage (m_attack_damage);
         DebugLogger.DebugUnitDamage (m_attack_damage, adventurer);

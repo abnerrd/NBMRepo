@@ -14,13 +14,13 @@ public class AdventurerPacket : MonoBehaviour
 
     public string adventureTitle;
 
-    public List<AdventurerScript> adventurers;
+    public List<AdventurerModel> adventurers;
     public int PartyCount { get { return adventurers.Count; } }
     public bool PartyDead
     {
         get
         {
-            foreach (AdventurerScript ad in adventurers)
+            foreach (AdventurerModel ad in adventurers)
             {
                 if (!ad.isDead)
                 {
@@ -76,11 +76,11 @@ public class AdventurerPacket : MonoBehaviour
         timer = 0;
         m_state = PacketState.PARTY_IN_PROGRESS;
         currentRoom = null;
-        adventurers = new List<AdventurerScript>();
+        adventurers = new List<AdventurerModel>();
         adventureTitle = expeditionTitle;
     }
 
-    public void addAdventurerToParty(AdventurerScript adventurer)
+    public void addAdventurerToParty(AdventurerModel adventurer)
     {
         adventurers.Add(adventurer);
     }

@@ -5,8 +5,8 @@ public class BossRoomScript : RoomScript
 {
     [SerializeField]
     private
-        BossScript bossReference;
-    public BossScript boss { get { return bossReference; } set { bossReference = value; } }
+        BossModel bossReference;
+    public BossModel boss { get { return bossReference; } set { bossReference = value; } }
 
 
     void Awake ()

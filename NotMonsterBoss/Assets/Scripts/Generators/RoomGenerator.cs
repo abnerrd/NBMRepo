@@ -59,7 +59,7 @@ public class RoomGenerator : MonoBehaviour
     {
         GameObject newRoom = new GameObject ();
         BossRoomScript roomScript = newRoom.AddComponent<BossRoomScript> ();
-        BossScript boss = newRoom.AddComponent<BossScript> ();
+        BossModel boss = newRoom.AddComponent<BossModel> ();
 
         roomScript._isBossRoom = true;
         roomScript.boss = boss;

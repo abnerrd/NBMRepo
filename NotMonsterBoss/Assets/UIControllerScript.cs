@@ -46,7 +46,8 @@ public class UIControllerScript : MonoBehaviour
 
     public void OnAddAdventurerButton ()
     {
-        DungeonManager.instance.enterDungeon (AdventurerGenerator.instance.GenerateUnique ());
+        DungeonManager.instance.enterDungeon (
+            AdventurerGenerator.instance.GenerateRandom (Random.Range(1,10), Enums.UnitRarity.e_rarity_COMMON));
     }
 
     public void OnRemoveAllAdventurersButton ()

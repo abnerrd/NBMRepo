@@ -152,14 +152,14 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    public void enterDungeon (AdventurerScript newAdventurer)
+    public void enterDungeon (AdventurerModel newAdventurer)
     {
-        List<AdventurerScript> solo_party = new List<AdventurerScript> ();
+        List<AdventurerModel> solo_party = new List<AdventurerModel> ();
         solo_party.Add (newAdventurer);
         enterDungeon (solo_party, newAdventurer.name + "'s Quest for Glory");
     }
 
-    public void enterDungeon (List<AdventurerScript> adventureParty, string expeditionTitle = "SuperQuest")
+    public void enterDungeon (List<AdventurerModel> adventureParty, string expeditionTitle = "SuperQuest")
     {
         Debug.Log ("And so begins " + expeditionTitle);
 
@@ -167,7 +167,7 @@ public class DungeonManager : MonoBehaviour
         GameObject dumb_pack = new GameObject();
         AdventurerPacket newExpedition = dumb_pack.AddComponent<AdventurerPacket>();
         newExpedition.initializePacket (expeditionTitle);
-        foreach (AdventurerScript ad in adventureParty) {
+        foreach (AdventurerModel ad in adventureParty) {
             newExpedition.addAdventurerToParty (ad);
         }
 
@@ -256,9 +256,9 @@ public class DungeonManager : MonoBehaviour
             // CONDITION :: Packet failed the challenge
 
             // TODO aherrera: post-mortem on what happens, and set if packet is still alive
-            foreach (AdventurerScript ad in packet.adventurers)
+            foreach (AdventurerModel ad in packet.adventurers)
             {
-                AdventurerScript finn = ad;
+                AdventurerModel finn = ad;
                 packet.currentRoom.onFailRoom (ref finn);
             }
 

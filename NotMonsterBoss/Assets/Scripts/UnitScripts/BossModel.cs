@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BossScript : UnitScript {
+public class BossModel : UnitScript {
 
     [SerializeField]
     private 

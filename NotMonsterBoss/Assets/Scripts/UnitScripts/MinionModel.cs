@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AdventurerScript : UnitScript {
+public class MinionModel : UnitScript {
 
 	// Use this for initialization
 	void Start ()

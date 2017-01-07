@@ -40,7 +40,8 @@ public class DebugScript : MonoBehaviour
             }
             if (Input.GetKeyUp(KeyCode.A))
             {
-                DungeonManager.instance.enterDungeon (_AdventurerGen.GenerateUnique ());
+                DungeonManager.instance.enterDungeon (
+                        _AdventurerGen.GenerateRandom (Random.Range(1,10),Enums.UnitRarity.e_rarity_COMMON));
             }
         }
     }
