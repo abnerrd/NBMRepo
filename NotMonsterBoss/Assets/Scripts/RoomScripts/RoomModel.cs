@@ -8,7 +8,7 @@ using System.Collections.Generic;
 //
 //  Dungeons are in charge of resetting a room, as well as triggering on room timer effects
 
-public class RoomScript : MonoBehaviour
+public class RoomModel : MonoBehaviour
 {
     [SerializeField]
     [Tooltip ("seconds")]
@@ -77,6 +77,7 @@ public class RoomScript : MonoBehaviour
     // TODO aherrera: extend to be an inherited class? BossRoom?
     public bool _isBossRoom = false;
 
+    RoomView mView;
 
     // Use this for initialization
     void Start ()

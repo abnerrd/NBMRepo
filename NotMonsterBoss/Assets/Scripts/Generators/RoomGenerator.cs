@@ -28,13 +28,13 @@ public class RoomGenerator : MonoBehaviour
         dataBase = GameObject.Find ("Database").GetComponent<Database> ();
     }
 
-    public RoomScript Generate (string name = "Default", string description = "Default Description", 
+    public RoomModel Generate (string name = "Default", string description = "Default Description", 
                                 string success = "You succeeded", string failure = "You failed", 
                                 Enums.UnitRarity rarity = Enums.UnitRarity.e_rarity_COMMON,
                                 int dex = 1, int str = 1, int wis = 1, int atk = 0, int timer = 10, int passReq = 1)
     {
         GameObject newRoom = new GameObject ();
-        RoomScript roomScript = newRoom.AddComponent<RoomScript> ();
+        RoomModel roomScript = newRoom.AddComponent<RoomModel> ();
 
         roomScript.room_name = name;
         roomScript.description = description;
@@ -79,10 +79,10 @@ public class RoomGenerator : MonoBehaviour
         return roomScript;
     }
 
-    public RoomScript GenerateUnique ()
+    public RoomModel GenerateUnique ()
     {
         GameObject newRoom = new GameObject ();
-        RoomScript roomScript = newRoom.AddComponent<RoomScript> ();
+        RoomModel roomScript = newRoom.AddComponent<RoomModel> ();
         RoomData roomData = dataBase.GetRandomRoom ();
 
         roomScript.room_name = roomData.room_name;

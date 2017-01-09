@@ -3,6 +3,8 @@ using System.Collections;
 
 public class AdventurerModel : UnitScript {
 
+    UnitView mView;
+
 	// Use this for initialization
 	void Start ()
     {

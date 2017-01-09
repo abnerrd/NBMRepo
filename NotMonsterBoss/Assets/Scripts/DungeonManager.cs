@@ -15,7 +15,7 @@ public class DungeonManager : MonoBehaviour
 {
     public static DungeonManager instance = null;
 
-    public List<RoomScript> m_roomsList;
+    public List<RoomModel> m_roomsList;
     public int totalRooms { get { return m_roomsList.Count; } }
 
     //  TODO aherrera : should this be private???
@@ -40,7 +40,7 @@ public class DungeonManager : MonoBehaviour
             DestroyObject (this.gameObject);
         }
 
-        m_roomsList = new List<RoomScript> ();
+        m_roomsList = new List<RoomModel> ();
         m_adventurersList = new List<AdventurerPacket> ();
         _roomsParent = new GameObject ();
         _roomsParent.name = "Parent -- Rooms";
@@ -134,7 +134,7 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    public void addRoom (RoomScript newRoom)
+    public void addRoom (RoomModel newRoom)
     {
         m_roomsList.Add (newRoom);
         newRoom.gameObject.transform.SetParent (_roomsParent.transform);
@@ -145,7 +145,7 @@ public class DungeonManager : MonoBehaviour
     /// Set in Rooms list as blank room
     /// </summary>
     /// <param name="destroyedRoom"></param>
-    public void destroyRoom (RoomScript destroyedRoom)
+    public void destroyRoom (RoomModel destroyedRoom)
     {
         if (m_roomsList.Contains (destroyedRoom)) {
             destroyedRoom.blankRoom ();
@@ -177,7 +177,7 @@ public class DungeonManager : MonoBehaviour
     }
 
     // Returns the RoomScript at the end of the list -- m_roomsList[0] == BOSSROOM
-    public RoomScript getDungeonEntrance ()
+    public RoomModel getDungeonEntrance ()
     {
         return m_roomsList [m_roomsList.Count - 1];
     }

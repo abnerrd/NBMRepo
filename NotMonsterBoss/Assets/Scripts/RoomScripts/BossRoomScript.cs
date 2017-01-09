@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BossRoomScript : RoomScript
+public class BossRoomScript : RoomModel
 {
     [SerializeField]
     private

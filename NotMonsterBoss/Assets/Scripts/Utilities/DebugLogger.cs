@@ -35,7 +35,7 @@ public class DebugLogger
         Debug.Log (challengeString.Bold ().Colored (color) + message + result.Colored (resultColor));
     }
 
-    public static void DebugRoomResult (int pass, int max, RoomScript room, UnitScript adventurer)
+    public static void DebugRoomResult (int pass, int max, RoomModel room, UnitScript adventurer)
     {
         string passed = pass.ToString () + "/" + max.ToString () + " challenges passed";
         string result = (pass >= max ? room.success : room.failure);
@@ -43,7 +43,7 @@ public class DebugLogger
         Debug.Log (passed + " | " + name + result);
     }
 
-    public static void DebugRoomTransition (RoomScript room, UnitScript unit)
+    public static void DebugRoomTransition (RoomModel room, UnitScript unit)
     {
         string unitName = unit._unitName;
         string roomName = room.room_name;

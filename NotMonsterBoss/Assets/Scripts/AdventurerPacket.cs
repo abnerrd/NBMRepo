@@ -42,7 +42,7 @@ public class AdventurerPacket : MonoBehaviour
     public PacketState State { get { return m_state; } }
 
     // TODO aherrera: exchange this for an id? or dictionary enum? for better comparison
-    public RoomScript currentRoom;
+    public RoomModel currentRoom;
 
     public float timer;
     //  TODO aherrera : Temp variable for now.. well, maybe not tbh.
