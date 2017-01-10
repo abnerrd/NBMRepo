@@ -30,9 +30,12 @@ public class DungeonModel : MonoBehaviour
     //  TODO aherrera, wspier : should the List be replaced w/ a map?
     protected List<AdventurerPacket> m_questingParties;
 
+    private DungeonView m_view;
 
-    //  TODO aherrera : create dummy objects to hold Rooms & AdventurerPackets
-
+    public int GetRoomCount ()
+    {
+        return m_roomList.Count;
+    }
 
     private void Awake()
     {
@@ -40,6 +43,7 @@ public class DungeonModel : MonoBehaviour
         m_roomList = new List<RoomModel>();
         m_allMinions = new List<MinionModel>();
         m_questingParties = new List<AdventurerPacket>();
+        m_view = GetComponent<DungeonView> ();
     }
 
     // Use this for initialization
@@ -58,9 +62,10 @@ public class DungeonModel : MonoBehaviour
     /// Room Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void AddRoomToDungeon(RoomModel new_room)
+    public void AddRoomToDungeon(GameObject new_room)
     {
-        m_roomList.Add(new_room);
+        m_roomList.Add(new_room.GetComponent<RoomModel>());
+        m_view.AddRoom (new_room);
     }
 
     //  TODO aherrear, wspier : Should this "blank" the room, or explicitly destroy room and shorten Dungeon

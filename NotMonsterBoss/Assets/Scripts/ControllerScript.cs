@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Utilities;
+
 /*
  *  Purpose of this class it to handle logic and push along the flow of the game.
  *  It'll recieve inputs & actions from the user and perform the appropriate commands and methods.
@@ -13,6 +15,11 @@ public class ControllerScript : MonoBehaviour
 {
     //  TODO aherrera, wspier : eventually replace with List of Dungeons for multiple Dungeons?
     DungeonModel m_playerDungeon;
+
+    public GameObject RoomPrefab;
+    public GameObject DungeonPrefab;
+
+    public GameObject MainCanvas;
 
     // Use this for initialization
     void Start()
@@ -31,16 +38,27 @@ public class ControllerScript : MonoBehaviour
 
     void InitializeDungeon()
     {
-        m_playerDungeon = this.gameObject.AddComponent<DungeonModel>();
-        GameObject newBossRoom = RoomGenerator.instance.GenerateUniqueBoss();
-        m_playerDungeon.AddRoomToDungeon(newBossRoom.GetComponent<BossRoomScript>());
-        newBossRoom.transform.SetParent(this.transform);
+        GameObject playerDungeon = GameObject.Instantiate (DungeonPrefab);
+        m_playerDungeon= playerDungeon.AddComponent<DungeonModel>();
+        m_playerDungeon.GetComponent<RectTransform> ().SetParent (MainCanvas.GetComponent<RectTransform> ());
+        m_playerDungeon.GetComponent<RectTransform> ().localPosition = Vector2.zero;
+        m_playerDungeon.name = "DUNGEON_1";
+
+        GameObject newRoomPrefab = GameObject.Instantiate (RoomPrefab);
+        RoomModel newBossRoom = RoomGenerator.instance.GenerateUniqueBoss();
+
+        newRoomPrefab.name = newBossRoom.room_name;
+        newRoomPrefab.AddComponent<RoomModel> (newBossRoom);
+        m_playerDungeon.AddRoomToDungeon(newRoomPrefab);
     }
 
     public void AddRandomRoom()
     {
+        GameObject newRoomPrefab = GameObject.Instantiate (RoomPrefab);
         RoomModel newRoom = RoomGenerator.instance.GenerateUnique();
-        m_playerDungeon.AddRoomToDungeon(newRoom);
+        newRoomPrefab.name = newRoom.room_name;
+        newRoomPrefab.AddComponent<RoomModel>(newRoom);
+        m_playerDungeon.AddRoomToDungeon(newRoomPrefab);
     }
 
     /// <summary>

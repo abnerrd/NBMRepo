@@ -52,17 +52,15 @@ public class RoomGenerator : MonoBehaviour
         return roomScript;
     }
 
-    public BossRoomScript GenerateBoss (string name = "Default", string description = "Default Description",
+    public RoomModel GenerateBoss (string name = "Default", string description = "Default Description",
                                     string success = "You succeeded", string failure = "You failed",
                                     Enums.UnitRarity rarity = Enums.UnitRarity.e_rarity_COMMON,
                                     int dex = 1, int str = 1, int wis = 1, int atk = 0, int timer = 10, int passReq = 1)
     {
-        GameObject newRoom = new GameObject ();
-        BossRoomScript roomScript = newRoom.AddComponent<BossRoomScript> ();
-        BossModel boss = newRoom.AddComponent<BossModel> ();
+        RoomModel roomScript = new RoomModel();
+        //BossModel boss = newRoom.AddComponent<BossModel> ();
 
         roomScript._isBossRoom = true;
-        roomScript.boss = boss;
 
         roomScript.room_name = name;
         roomScript.description = description;
@@ -81,8 +79,7 @@ public class RoomGenerator : MonoBehaviour
 
     public RoomModel GenerateUnique ()
     {
-        GameObject newRoom = new GameObject ();
-        RoomModel roomScript = newRoom.AddComponent<RoomModel> ();
+        RoomModel roomScript = new RoomModel ();
         RoomData roomData = dataBase.GetRandomRoom ();
 
         roomScript.room_name = roomData.room_name;
@@ -98,15 +95,12 @@ public class RoomGenerator : MonoBehaviour
         roomScript.timer_frequency = roomData.timer;
         roomScript.pass_req = roomData.pass_req;
 
-        newRoom.name = roomScript.room_name + " - " + roomScript.description;
-
         return roomScript;
     }
 
-    public GameObject GenerateUniqueBoss ()
+    public RoomModel GenerateUniqueBoss ()
     {
-        GameObject newRoom = new GameObject ();
-        BossRoomScript roomScript = newRoom.AddComponent<BossRoomScript> ();
+        RoomModel roomScript = new RoomModel ();
         RoomData roomData = dataBase.GetRandomBossRoom ();
 
         roomScript.room_name = roomData.room_name;
@@ -122,8 +116,6 @@ public class RoomGenerator : MonoBehaviour
         roomScript.timer_frequency = roomData.timer;
         roomScript.pass_req = roomData.pass_req;
 
-        newRoom.name = roomScript.room_name + " - " + roomScript.description;
-
-        return newRoom;
+        return roomScript;
     }
 }
