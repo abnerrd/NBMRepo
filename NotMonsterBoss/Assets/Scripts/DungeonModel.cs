@@ -31,6 +31,10 @@ public class DungeonModel : MonoBehaviour
     protected List<AdventurerPacket> m_questingParties;
 
     private DungeonView m_view;
+    public void SetView (DungeonView view)
+    {
+        m_view = view;
+    }
 
     public int GetRoomCount ()
     {
@@ -43,7 +47,6 @@ public class DungeonModel : MonoBehaviour
         m_roomList = new List<RoomModel>();
         m_allMinions = new List<MinionModel>();
         m_questingParties = new List<AdventurerPacket>();
-        m_view = GetComponent<DungeonView> ();
     }
 
     // Use this for initialization

@@ -40,6 +40,7 @@ public class ControllerScript : MonoBehaviour
     {
         GameObject playerDungeon = GameObject.Instantiate (DungeonPrefab);
         m_playerDungeon= playerDungeon.AddComponent<DungeonModel>();
+        m_playerDungeon.SetView (playerDungeon.GetComponent<DungeonView> ());
         m_playerDungeon.GetComponent<RectTransform> ().SetParent (MainCanvas.GetComponent<RectTransform> ());
         m_playerDungeon.GetComponent<RectTransform> ().localPosition = Vector2.zero;
         m_playerDungeon.name = "DUNGEON_1";
