@@ -116,8 +116,8 @@ public class DungeonManager : MonoBehaviour
     /// <param name="expedition"></param>           
     void updateExpeditionToNextRoom (AdventurerPacket expedition, bool toEntrance = false)//, int nextRoomIndex = -1);
     {
-        int index = (expedition.currentRoom != null ? m_roomsList.IndexOf (expedition.currentRoom) : 99);
-        index--;
+        int index = expedition.current_room_index;//(expedition.currentRoom != null ? m_roomsList.IndexOf (expedition.currentRoom) : 99);
+        //index--;
 
         if (index < 0 && !expedition.PartyDead)
         {
@@ -127,10 +127,10 @@ public class DungeonManager : MonoBehaviour
         }
         else
         {
-            expedition.currentRoom = (toEntrance ? getDungeonEntrance () : m_roomsList [index]);
+        //    expedition.currentRoom = (toEntrance ? getDungeonEntrance () : m_roomsList [index]);
             //StartCoroutine (attemptRoom (expedition));    //  11/12 - previous "Start packet"
-            expedition.StartPacket();
-            DebugLogger.DebugRoomTransition (expedition.currentRoom, expedition.adventurers [0]);
+        //    expedition.StartPacket();
+       //     DebugLogger.DebugRoomTransition (expedition.currentRoom, expedition.adventurers [0]);
         }
     }
 
@@ -200,46 +200,46 @@ public class DungeonManager : MonoBehaviour
     void UpdatePackets()
     {
 
-        foreach(AdventurerPacket packet in m_adventurersList)
-        {
-            packet.UpdatePacket();
+        //foreach(AdventurerPacket packet in m_adventurersList)
+        //{
+        //    packet.UpdatePacket();
 
-            if(packet.TimerComplete)
-            {
-                if(!packet.PacketCompleteAcknowledged)
-                {
-                    if (packet.State == AdventurerPacket.PacketState.PARTY_IN_PROGRESS)
-                    {
-                        endRoomAttempt(packet);
-                    }
-                    else
-                    {
-                        DebugLogger.DebugSystemMessage("DungeonManager::UpdatePackets -- time expired, but packet state is " + packet.State.ToString());
-                    }
-                }
-                packet.PacketCompleteAcknowledged = true;
+        //    if(packet.TimerComplete)
+        //    {
+        //        if(!packet.PacketCompleteAcknowledged)
+        //        {
+        //            if (packet.State == AdventurerPacket.PacketState.PARTY_IN_PROGRESS)
+        //            {
+        //                endRoomAttempt(packet);
+        //            }
+        //            else
+        //            {
+        //                DebugLogger.DebugSystemMessage("DungeonManager::UpdatePackets -- time expired, but packet state is " + packet.State.ToString());
+        //            }
+        //        }
+        //        packet.PacketCompleteAcknowledged = true;
 
 
-                //  Update packets to next step
-                if (packet.PartyDead)
-                {
-                    packet.SetPacketFailure();
-                    DebugLogger.DebugGameObver ();
-                }
-                else
-                {
-                    updateExpeditionToNextRoom(packet);
-                }
+        //        //  Update packets to next step
+        //        if (packet.PartyDead)
+        //        {
+        //            packet.SetPacketFailure();
+        //            DebugLogger.DebugGameObver ();
+        //        }
+        //        else
+        //        {
+        //            updateExpeditionToNextRoom(packet);
+        //        }
 
-            }
-        }
+        //    }
+        //}
     }
 
 
     // update the packet with the results
     private void endRoomAttempt (AdventurerPacket packet)
     {
-        if (packet.currentRoom.challengeParty (packet.adventurers))
+ //       if (packet.currentRoom.challengeParty (packet.adventurers))
         {
             // CONDITION :: Adventurer beat room challenge
 
@@ -249,9 +249,9 @@ public class DungeonManager : MonoBehaviour
                 partyPreamble = packet.adventurers [0]._unitName;
             }
 
-            //  TODO aherrera : onPacketRoomChallengeSuccess
+           //  TODO aherrera : onPacketRoomChallengeSuccess
         }
-        else
+//        else
         {
             // CONDITION :: Packet failed the challenge
 
@@ -259,7 +259,7 @@ public class DungeonManager : MonoBehaviour
             foreach (AdventurerModel ad in packet.adventurers)
             {
                 AdventurerModel finn = ad;
-                packet.currentRoom.onFailRoom (ref finn);
+    //            packet.currentRoom.onFailRoom (ref finn);
             }
 
             // TODO aherrera : onPacketRoomChallengeFail

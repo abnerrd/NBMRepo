@@ -5,6 +5,7 @@ using System;
 /// The Helper class contains a grouping of methods so that they can be
 /// easily re-used.
 /// </summary>
+
 static public class Helper 
 {
     #region Constants
@@ -314,6 +315,60 @@ static public class Helper
     public static string ConvertTimeSpanToString(TimeSpan time)
     {
         return ConvertSecondsToHourString(time.TotalSeconds);
+    }
+    public static class Epoch
+    {
+        public static DateTime epochStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static int GetCurrentTimestamp()
+        {
+            return ((int)(DateTime.UtcNow - epochStart).TotalSeconds);
+        }
+
+        /// <summary>
+        /// Get a timestamp [delta] seconds from now
+        /// </summary>
+        /// <param name="additional_seconds"></param>
+        /// <returns></returns>
+        public static int GetEpochTimestamp(double delta_seconds)
+        {
+            DateTime delta_timestamp = DateTime.UtcNow;
+            DebugLogger.DebugSystemMessage("BEFORE: " + delta_timestamp.ToString());
+            delta_timestamp = delta_timestamp.AddSeconds(delta_seconds);
+            DebugLogger.DebugSystemMessage("AFTER: " + delta_timestamp.ToString());
+            return ((int)(delta_timestamp - epochStart).TotalSeconds);
+        }
+
+        /// <summary>
+        /// Get a timestamp [delta] seconds from the given epoch timestamp
+        /// </summary>
+        /// <param name="epochTimestamp"></param>
+        /// <param name="delta_seconds"></param>
+        /// <returns></returns>
+        public static int GetEpochTimestamp(int epochTimestamp, double delta_seconds)
+        {
+            DateTime deltaDT = epochStart.AddSeconds(epochTimestamp + delta_seconds);
+            return ((int)(deltaDT - epochStart).TotalSeconds);
+        }
+
+        /// <summary>
+        /// Get the difference in elapsed seconds from the two timestamps.
+        /// [ ts1 - ts2 ]
+        /// </summary>
+        /// <returns></returns>
+        public static float GetElapsedSeconds(int ts1, int ts2)
+        {
+            return ts1 - ts2;
+        }
+
+        /// <summary
+        /// </summary>
+        /// <param name="timestamp"></param>
+        /// <returns></returns>
+        public static bool IsPastTimestamp(int timestamp)
+        {
+            return ((timestamp - GetCurrentTimestamp()) <= 0);
+        }
+
     }
     #endregion
 

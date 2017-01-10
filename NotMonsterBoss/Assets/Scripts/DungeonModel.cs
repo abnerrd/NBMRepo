@@ -30,6 +30,10 @@ public class DungeonModel : MonoBehaviour
     //  TODO aherrera, wspier : should the List be replaced w/ a map?
     protected List<AdventurerPacket> m_questingParties;
 
+
+    //  TODO aherrera : create dummy objects to hold Rooms & AdventurerPackets
+
+
     private void Awake()
     {
         //  TODO aherrera : move these into an initialize script
@@ -100,6 +104,10 @@ public class DungeonModel : MonoBehaviour
             Debug.LogWarning("DungeonModel::GetBossRoom -- room list <= 0!");
             return null;
         }
+    }
+    public int GetEntrance()
+    {
+        return m_roomList.Count - 1;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
