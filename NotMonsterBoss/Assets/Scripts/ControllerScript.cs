@@ -18,6 +18,7 @@ public class ControllerScript : MonoBehaviour
 
     public GameObject RoomPrefab;
     public GameObject DungeonPrefab;
+    public GameObject BossRoomPrefab;
 
     public GameObject MainCanvas;
 
@@ -44,7 +45,7 @@ public class ControllerScript : MonoBehaviour
         m_playerDungeon.init (mc);
         m_playerDungeon.name = "DUNGEON_1";
 
-        GameObject newRoomPrefab = Instantiate (RoomPrefab);
+        GameObject newRoomPrefab = Instantiate (BossRoomPrefab);
         RoomModel newBossRoom = RoomGenerator.instance.GenerateUniqueBoss();
 
         newRoomPrefab.name = newBossRoom.room_name;
