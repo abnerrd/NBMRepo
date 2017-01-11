@@ -1,4 +1,4 @@
-﻿#pragma warning disable 
+﻿#pragma warning disable 612, 618
 using UnityEngine;
 using System;
 using System.IO;

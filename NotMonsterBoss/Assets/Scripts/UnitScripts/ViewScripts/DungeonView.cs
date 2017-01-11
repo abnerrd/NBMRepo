@@ -30,10 +30,10 @@ public class DungeonView : MonoBehaviour
     {
         int roomCount = GetComponent<DungeonModel> ().GetRoomCount ();
         RectTransform newRect = newRoom.GetComponent<RectTransform> ();
-        newRect.SetParent (GetComponent<RectTransform> ());
-        newRect.SetInsetAndSizeFromParentEdge (RectTransform.Edge.Left, 1.0f, GetComponent<RectTransform> ().rect.width);
-        newRect.SetInsetAndSizeFromParentEdge (RectTransform.Edge.Top, 1.0f, newRect.rect.height);
-        newRect.position = new Vector2 (newRect.position.x, newRect.position.y - newRect.rect.height * (roomCount-1));
+        newRect.SetParent (mTransform, false);
+        newRect.SetInsetAndSizeFromParentEdge (RectTransform.Edge.Left, 1.0f, mTransform.rect.width);
+        newRect.SetInsetAndSizeFromParentEdge (RectTransform.Edge.Top, 1.0f,(mTransform.rect.height  / 5 ));
+        newRect.position = new Vector2 (newRect.position.x, newRect.position.y - (mTransform.rect.height/ 5) * (roomCount-1) * newRect.lossyScale.y);
     }
 
 
@@ -42,7 +42,7 @@ public class DungeonView : MonoBehaviour
 
 
     // Use this for initialization
-    void Start ()
+    void Awake ()
     {
         mCurrentSprite = mDefaultSprite;
         mTransform = GetComponent<RectTransform> ();

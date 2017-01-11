@@ -8,7 +8,7 @@ using Utilities;
 // It is stored within the AdventurerList in the database
 // Rarity is an Enum and must be converted using the EnumUtility
 /// </summary>
-public class AdventurerData : MonoBehaviour
+public class AdventurerData
 {
     #region Public Vars
     [CSVColumn ("NAME")]

@@ -60,6 +60,15 @@ public class DungeonModel : MonoBehaviour
 		
 	}
 
+    public void init (RectTransform MainCanvas)
+    {
+        RectTransform pd_transform = GetComponent<RectTransform> ();
+        pd_transform.SetParent (MainCanvas, false);
+        pd_transform.SetAsFirstSibling ();
+        pd_transform.rect.size.Set (MainCanvas.rect.size.x, MainCanvas.rect.size.y);
+        m_view = GetComponent<DungeonView> ();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Room Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////

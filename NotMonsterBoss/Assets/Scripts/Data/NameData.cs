@@ -7,7 +7,7 @@ using Utilities;
 // This class stores all the data imported from NameData.csv
 // It is stored within the NameList in the database
 /// </summary>
-public class NameData : MonoBehaviour
+public class NameData 
 {
     #region Public Vars
     [CSVColumn ("TITLE")]

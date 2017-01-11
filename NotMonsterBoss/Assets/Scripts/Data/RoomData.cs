@@ -3,7 +3,7 @@ using System.Collections;
 
 using Utilities;
 
-public class RoomData : MonoBehaviour
+public class RoomData
 {
     #region Public Vars
     [CSVColumn ("NAME")]

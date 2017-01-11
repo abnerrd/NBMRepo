@@ -38,14 +38,13 @@ public class ControllerScript : MonoBehaviour
 
     void InitializeDungeon()
     {
-        GameObject playerDungeon = GameObject.Instantiate (DungeonPrefab);
-        m_playerDungeon= playerDungeon.AddComponent<DungeonModel>();
-        m_playerDungeon.SetView (playerDungeon.GetComponent<DungeonView> ());
-        m_playerDungeon.GetComponent<RectTransform> ().SetParent (MainCanvas.GetComponent<RectTransform> ());
-        m_playerDungeon.GetComponent<RectTransform> ().localPosition = Vector2.zero;
+        GameObject playerDungeon = Instantiate (DungeonPrefab);
+        RectTransform mc = MainCanvas.GetComponent<RectTransform> ();
+        m_playerDungeon = playerDungeon.GetComponent<DungeonModel> ();
+        m_playerDungeon.init (mc);
         m_playerDungeon.name = "DUNGEON_1";
 
-        GameObject newRoomPrefab = GameObject.Instantiate (RoomPrefab);
+        GameObject newRoomPrefab = Instantiate (RoomPrefab);
         RoomModel newBossRoom = RoomGenerator.instance.GenerateUniqueBoss();
 
         newRoomPrefab.name = newBossRoom.room_name;
@@ -55,7 +54,7 @@ public class ControllerScript : MonoBehaviour
 
     public void AddRandomRoom()
     {
-        GameObject newRoomPrefab = GameObject.Instantiate (RoomPrefab);
+        GameObject newRoomPrefab = Instantiate (RoomPrefab);
         RoomModel newRoom = RoomGenerator.instance.GenerateUnique();
         newRoomPrefab.name = newRoom.room_name;
         newRoomPrefab.AddComponent<RoomModel>(newRoom);
