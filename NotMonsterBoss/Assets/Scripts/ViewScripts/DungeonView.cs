@@ -32,8 +32,8 @@ public class DungeonView : MonoBehaviour
         RectTransform newRect = newRoom.GetComponent<RectTransform> ();
         newRect.SetParent (mTransform, false);
         newRect.SetInsetAndSizeFromParentEdge (RectTransform.Edge.Left, 1.0f, mTransform.rect.width);
-        newRect.SetInsetAndSizeFromParentEdge (RectTransform.Edge.Top, 1.0f,(mTransform.rect.height  / 5 ));
-        newRect.position = new Vector2 (newRect.position.x, newRect.position.y - (mTransform.rect.height/ 5) * (roomCount-1) * newRect.lossyScale.y);
+        newRect.SetInsetAndSizeFromParentEdge (RectTransform.Edge.Top, 1.0f,(mTransform.rect.height  / 8 ));
+        newRect.position = new Vector2 (newRect.position.x, newRect.position.y - (mTransform.rect.height/ 8) * (roomCount-1) * newRect.lossyScale.y);
     }
 
 
