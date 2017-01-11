@@ -10,12 +10,8 @@ using System.Collections.Generic;
 
 public class AdventurerPacket : MonoBehaviour
 {
-                //  packetReference should be a key or something else.. I don't think it gets passed-by-ref
-    public delegate void PacketTimerCompleteCallback(ref AdventurerPacket packetReference);
-    public event PacketTimerCompleteCallback Event_TimerComplete;
-
-
-    //  TODO aherrera : reorder all these variables to not ALL be public.. the problem switching from a struct to a class :-P
+    public delegate void PacketTimerCompleteCallback(string packet_key);
+    private event PacketTimerCompleteCallback Event_TimerComplete;
 
     public string adventureTitle;
 
@@ -48,13 +44,15 @@ public class AdventurerPacket : MonoBehaviour
     public PacketState State { get { return m_state; } }
 
     // TODO aherrera: exchange this for an id? or dictionary enum? for better comparison
-    //    public RoomModel currentRoom;
     //  TODO aherrera : what happens when/if List count gets modified? 
     public int current_room_index;
 
     //  The timestamp this packet is racing towards to call Event_TimerComplete
     protected int epoch_timer_timestamp;
-    protected bool epoch_flag = false;      //  should consider replacing this with something else.. (only used for multiple event calls
+    protected bool epoch_flag = false;      //  should consider replacing this with something else.. (only used for multiple event calls)
+
+    protected string dictionaryKey;
+    public string DictionaryKey { get { return dictionaryKey; } }
 
     // Use this for initialization
     void Start()
@@ -68,13 +66,10 @@ public class AdventurerPacket : MonoBehaviour
         if(!epoch_flag && m_state == PacketState.PARTY_IN_PROGRESS && Helper.Epoch.IsPastTimestamp(epoch_timer_timestamp))
         {
             DebugLogger.DebugSystemMessage("HANDLING : TIMESTAMP @ " + epoch_timer_timestamp);
-            //  TODO aherrera, wspier : does this require a 'ref' keyword?
             epoch_flag = true;
             if(Event_TimerComplete != null)
             {
-                //  forgive me
-                AdventurerPacket packet_ref = this;
-                Event_TimerComplete(ref packet_ref);
+                Event_TimerComplete(dictionaryKey);
             }
         }
     }
@@ -89,12 +84,16 @@ public class AdventurerPacket : MonoBehaviour
         adventureTitle = expeditionTitle;
     }
 
+
+
     /// <summary>
     /// Changes PACKET_STATE to IN_PROGRESS so that the Event_TimerComplete will start calling.
     /// Probably should call this AFTER you SetTimer()
     /// </summary>
-    public void StartPacket()
+    /// <param name="dictionary_key">Needs a key to start..?</param>
+    public void StartPacket(string dictionary_key)
     {
+        dictionaryKey = dictionary_key;
         m_state = PacketState.PARTY_IN_PROGRESS;
     }
 
@@ -113,19 +112,65 @@ public class AdventurerPacket : MonoBehaviour
         epoch_flag = false;
     }
 
-    public void SetPacketSuccess()
+    /// <summary>
+    /// Returns:  Current Room Index -= 1
+    /// </summary>
+    /// <returns></returns>
+    public int AdvanceIndex()
     {
+        return --current_room_index;
+    }
+
+    //  TODO aherrera, wspier: please rename this + parameter
+    public void AwardPacket(RoomModel parental_room)
+    {
+
+    }
+
+    //  TODO aherrera, wspier: please rename this + parameter
+    /// <summary>
+    /// With RoomModel param, deal consequences of room to Party
+    /// </summary>
+    public void PunishPacket(RoomModel parental_room)
+    {
+        //  HEY THIS MIGHT NOT WORK BUUUUUUUUUT PUTTING IT IN BEFORE I COMMIT [1/10]
+        foreach(AdventurerModel ad_mod in adventurers)
+        {
+            ad_mod.applyDamage(parental_room.room_attack);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void SetPacketDungeonCompleted()
+    {
+        DebugLogger.DebugSystemMessage("PACKET HAS DEFEATED DUNGEON. GOOD JOB " + adventureTitle);
+
         m_state = PacketState.PARTY_SUCCESS;
 
         //  TODO aherrera : reward all Adventurers who survived -- maybe put some in a "history"? Legends, memorial, etc.
     }
 
-    public void SetPacketFailure()
+    public void SetPacketDungeonFailure()
     {
         m_state = PacketState.PARTY_FAILED;
 
         //  TODO aherrera : is there any more punishment after death?
     }
 
+
+    //  TODO aherrera : for these two functions, should there be a list holding all these "listeners"? What if the wrong callback is sent...?
+    public void RegisterToEvent_TimerComplete(PacketTimerCompleteCallback callback)
+    {
+        DebugLogger.DebugSystemMessage("REGISTERING TO EVENT FOR :" + this.adventureTitle);
+        Event_TimerComplete += callback;
+    }
+
+    public void UnregisterToEvent_TimerComplete(PacketTimerCompleteCallback callback)
+    {
+        DebugLogger.DebugSystemMessage("UNREGISTERING TO EVENT FOR :" + this.adventureTitle);
+        Event_TimerComplete -= callback;
+    }
     
 }

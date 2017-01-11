@@ -27,8 +27,7 @@ public class DungeonModel : MonoBehaviour
     /// <summary>
     /// List of all groups of adventurers currently progressing through the Dungeon.
     /// </summary>
-    //  TODO aherrera, wspier : should the List be replaced w/ a map?
-    protected List<AdventurerPacket> m_questingParties;
+    protected Dictionary<string, AdventurerPacket> m_questingParties;
 
     private DungeonView m_view;
     public void SetView (DungeonView view)
@@ -46,7 +45,7 @@ public class DungeonModel : MonoBehaviour
         //  TODO aherrera : move these into an initialize script
         m_roomList = new List<RoomModel>();
         m_allMinions = new List<MinionModel>();
-        m_questingParties = new List<AdventurerPacket>();
+        m_questingParties = new Dictionary<string, AdventurerPacket>();
     }
 
     // Use this for initialization
@@ -122,22 +121,41 @@ public class DungeonModel : MonoBehaviour
     /// Party Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void AddPartyToDungeon(AdventurerPacket new_party)
+    public string AddPartyToDungeon(AdventurerPacket new_party)
     {
-        m_questingParties.Add(new_party);
-    }
+        //  TODO aherrera : HEY pls randomize me
+        //  TODO aherrera : probably make sure i'm unique
+        string packet_key = "BEST KEY";
+        m_questingParties.Add(packet_key, new_party);
+        
+        InitializePacketToRoom(packet_key, GetEntrance());
 
-    //  TODO aherrera : exchange parameter for map index?
-    public void RemovePartyFromDungeon(AdventurerPacket party_to_destroy)
+        return packet_key;
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="packet_key"></param>
+    /// <returns>Returns reference to removed packet</returns>
+    public AdventurerPacket RemovePartyFromDungeon(string packet_key)
     {
-        if (m_questingParties.Contains(party_to_destroy))
+        AdventurerPacket return_value = null;
+        if (m_questingParties.ContainsKey(packet_key))
         {
-            m_questingParties.Remove(party_to_destroy);
+            return_value = m_questingParties[packet_key];
+            m_questingParties.Remove(packet_key);
         }
         else
         {
             DebugLogger.DebugSystemMessage("DungeonModel::RemovePartyFromDungeon -- party to destroy not in List!");
         }
+        return return_value;
+    }
+
+    public List<string> GetPacketKeysList()
+    {
+        return new List<string>(m_questingParties.Keys);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,4 +189,119 @@ public class DungeonModel : MonoBehaviour
         //  TODO aherrera : Remove Minion from RoomModel
     }
 
+
+
+    /////////////////////////////////////
+    /// METHODS THAT COULD POSSIBLY NOT BELONG IN A MODEL?
+    /////////////////////////////////////
+
+
+
+    /// <summary>
+    /// Challenge packet to their CurrentRoom.
+    /// Returns : TRUE if party is still ALIVE
+    /// </summary>
+    /// <param name="packet_key"></param>
+    /// <returns>Returns TRUE if the party is ALIVE</returns>
+    public bool ChallengePacketInCurrentRoom(string packet_key)
+    {
+        AdventurerPacket party_packet = m_questingParties[packet_key];
+        if(party_packet != null)
+        {
+            RoomModel party_current_room = GetRoom(party_packet.current_room_index);
+            if (party_current_room != null)
+            {
+                bool challenge_successful = party_current_room.challengeParty(party_packet.adventurers);
+                if (challenge_successful)
+                {
+                    party_packet.AwardPacket(party_current_room);
+                }
+                else
+                {
+                    party_packet.PunishPacket(party_current_room);
+                }
+            }
+            else { Debug.LogError("DungeonModel::ChallengePacketInCurrentRoom -- room not in list from packet: " + party_packet.adventureTitle); }
+
+            //  TODO aherrera, wspier : like, should this logic be in the Model?? Should it be in charge to figure it out?
+            if(party_packet.PartyDead)
+            {
+                party_packet.SetPacketDungeonFailure();
+            }
+
+            return !party_packet.PartyDead;
+        }
+        else { Debug.LogError("DungeonModel::ChallengePacketInCurrentRoom -- packet not found in list with string: " + packet_key); }
+        
+    //  Hey! Pls don't come here okay thanks                     
+        return false;
+    }
+
+    /// <summary>
+    /// Advances Packet to the next room.
+    /// Updates packet with new room data.
+    /// Returns : TRUE if packet has completed dungeon
+    /// </summary>
+    /// <param name="packet"></param>
+    public bool UpdatePacketToNextRoom(string packet_key)
+    {
+        AdventurerPacket party_packet = m_questingParties[packet_key];
+        if (party_packet != null)
+        {
+            //  We move in the list from last->first
+            bool completed_dungeon = (0 > party_packet.AdvanceIndex());
+
+            if(completed_dungeon)
+            {
+                //  TODO aherrera : Party has defeated the boss? 
+                party_packet.SetPacketDungeonCompleted();
+            }
+            else
+            {
+                RoomModel party_new_current_room = GetRoom(party_packet.current_room_index);
+                if (party_new_current_room != null)
+                {
+                    InitializePacketToRoom(packet_key);
+                }
+            }
+
+            return completed_dungeon;
+        }else { Debug.LogError("DungeonModel::UpdatePacketToNextRoom -- packet not found in list with string: " + packet_key); }
+
+        //  Hey pls don't be here
+        //  TODO aherrera : handle these kinds of errors to search out and erase traces of this packet?
+        return false;
+    }
+
+    /// <summary>
+    /// Initialize Packet data to it's Current Room.
+    /// Optional param sets to given room index
+    /// </summary>
+    /// <param name="packet_key"></param>
+    /// <param name="new_room_index">optional; sets the packet to this room index</param>
+    public void InitializePacketToRoom(string packet_key, int new_room_index = -1)
+    {
+        AdventurerPacket packet_reference = m_questingParties[packet_key];
+
+        //  TODO aherrera, wspier : should 0 be allowed? That would mean fighting Boss Room right away
+        if(new_room_index >= 0)
+        {
+            packet_reference.current_room_index = new_room_index;
+        }
+
+        //  TODO aherrera : replace this check with something more elegant :/
+        if(new_room_index >= m_roomList.Count)
+        {
+            Debug.LogError("GIVEN INDEX LARGER THAN ARRAY SIZE");
+        }
+        
+        RoomModel current_room_reference = m_roomList[packet_reference.current_room_index];
+
+        if (current_room_reference != null)
+        {
+            packet_reference.SetTimer(current_room_reference.timer_frequency);
+        }
+        else { Debug.LogError("DungeonModel::InitializePacketToCurrentRoom -- currentroom not found for string: " + packet_key); }
+
+    }
 }

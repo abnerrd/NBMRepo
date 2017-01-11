@@ -64,18 +64,16 @@ public class ControllerScript : MonoBehaviour
 
     /// <summary>
     /// Start a "Party" at the entrance of a Dungeon.
+    /// ! ONLY METHOD THAT USES 'ref AdventurerPacket' IN PARAMETER
     /// </summary>
     /// <param name="new_packet">Data of the party</param>
     public void AddAndStartPacket(ref AdventurerPacket new_packet)
     {
         DebugLogger.DebugSystemMessage("Inserting " + new_packet.adventureTitle + " Party to Dungeon");
-     
-        new_packet.Event_TimerComplete += HandlePacketChallenge;
-        m_playerDungeon.AddPartyToDungeon(new_packet);
-        new_packet.current_room_index = m_playerDungeon.GetEntrance();
-        SetPartyToCurrentRoom(ref new_packet);
 
-        new_packet.StartPacket();
+        new_packet.RegisterToEvent_TimerComplete(HandlePacketChallenge);
+        string packet_key = m_playerDungeon.AddPartyToDungeon(new_packet);
+        new_packet.StartPacket(packet_key);
     }
 
     //  DEBUGGING
@@ -92,51 +90,22 @@ public class ControllerScript : MonoBehaviour
         AddAndStartPacket(ref newpackofcigs);
     }
 
-    public void RemovePacketFromDungeon(ref AdventurerPacket packet_to_remove)
+    public void RemovePacketFromDungeon(string packet_key)
     {
-        packet_to_remove.Event_TimerComplete -= HandlePacketChallenge;
-        m_playerDungeon.RemovePartyFromDungeon(packet_to_remove);
+        AdventurerPacket packet_to_remove = m_playerDungeon.RemovePartyFromDungeon(packet_key);
+
+        //  RISK aherrera : is this gonna work? Like, since we're not really returning a reference
+        //                      to packet_to_remove, will it unregister from the Packet correctly?
+        packet_to_remove.UnregisterToEvent_TimerComplete(HandlePacketChallenge);
     }
 
-    /// <summary>
-    /// Initializes Room data to Packet Data
-    /// </summary>
-    /// <param name="packet"></param>
-    protected void SetPartyToCurrentRoom(ref AdventurerPacket packet)
-    {
-        DebugLogger.DebugSystemMessage("SETTING PARTY TO ROOM");
-
-        RoomModel partys_current_room = m_playerDungeon.GetRoom(packet.current_room_index);
-        if (partys_current_room)
-        {
-            //  TODO aherrera, wspier : Architecture question - should the actions performed here be in a method within AdventurerPacket? AdventurerPacket.ReadyPartyForNextRoom?
-            packet.SetTimer(partys_current_room.timer_frequency);
-        }
-        else
-        {
-            Debug.LogError("ControllerScript::SetPartyToCurrentRoom -- index for room is invalid: " + packet.current_room_index);
-        }
-    }
-
-    protected void UpdatePartyToNextRoom(ref AdventurerPacket packet)
+    protected void UpdatePartyToNextRoom(string party_key)
     {
         DebugLogger.DebugSystemMessage("UPDATING PARTY TO NEXT ROOM");
-
-        //  We move in the list from last->first
-        int next_room_index = packet.current_room_index--;
-        packet.current_room_index = next_room_index;
-
-        if (next_room_index < 0)
+        if(m_playerDungeon.UpdatePacketToNextRoom(party_key))
         {
-            //  TODO aherrera : Party has defeated the boss? 
-
-            packet.SetPacketSuccess();
-        }
-        else
-        {
-            if (next_room_index == 0) DebugLogger.DebugSystemMessage("Packet " + packet.adventureTitle + " has entered the BOSS ROOM");
-
-            SetPartyToCurrentRoom(ref packet);
+            //  STATE :: Packet has defeated dungeon!
+            //  celebrate
         }
     }
 
@@ -144,50 +113,16 @@ public class ControllerScript : MonoBehaviour
     /// Listener to packet's "Event_TimerComplete"
     /// </summary>
     /// <param name="packetReference"></param>
-    protected void HandlePacketChallenge(ref AdventurerPacket packetReference)
+    protected void HandlePacketChallenge(string packet_key)
     {
         //  TODO aherrera : Challenge room, update accordingly
 
-        RoomModel party_current_room = m_playerDungeon.GetRoom(packetReference.current_room_index);
-        if(party_current_room)
+        if(m_playerDungeon.ChallengePacketInCurrentRoom(packet_key))
         {
-            bool challenge_success = party_current_room.challengeParty(packetReference.adventurers);
-            if(challenge_success)
-            {
-                //  STATE SHOULD BE: Party beat room challenge
-                
-            }
-            else
-            {
-                //  STATE SHOULD BE: Party lost room challenge
-
-                //  TODO aherrera : perform consequences here -- the Room should provide FAIL CONDITIONS (?)
-                for(int i = 0; i < packetReference.adventurers.Count; ++i)
-                {
-                    // aherrera, RISK OF ERROR : last time I used the 'ref', the actual data was lost. 
-                    AdventurerModel finn = packetReference.adventurers[i];
-                    party_current_room.onFailRoom(ref finn);
-                }
-
-            }
-
-            if(!packetReference.PartyDead)
-            {
-                //  Actually progress Packet
-                UpdatePartyToNextRoom(ref packetReference);
-            }
-            else
-            {
-                packetReference.SetPacketFailure();
-            }
-
-
+            //  STATE :: Party should still be ALIVE
+            //  Actually progress Packet
+            UpdatePartyToNextRoom(packet_key);
         }
-        else
-        {
-            Debug.LogError("ControllerScript::HandlePacketChallenge - current room from index [" + packetReference.current_room_index + "] is Invalid!");
-        }
-
     }
 
 }
