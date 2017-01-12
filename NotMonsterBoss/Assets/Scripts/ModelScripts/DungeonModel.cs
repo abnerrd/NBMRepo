@@ -128,7 +128,20 @@ public class DungeonModel : MonoBehaviour
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Party Methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /// <summary>
+    /// Call this method AFTER the packet is added!
+    /// </summary>
+    public void StartPartyPacket(string packet_key)
+    {
+        if(m_questingParties.ContainsKey(packet_key))
+        {
+            m_questingParties[packet_key].StartPacket(packet_key);
+        }
+        else { Debug.LogError("DungeonModel::StartPartyPacket -- packet not found with key: " + packet_key); }
+    }
 
     public string AddPartyToDungeon(AdventurerPacket new_party)
     {
