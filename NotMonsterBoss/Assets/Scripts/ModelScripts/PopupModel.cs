@@ -7,24 +7,12 @@ using UnityEngine;
  */
 
 public class PopupModel : MonoBehaviour
-{
-    public delegate void dPopupCallback();
-
+{ 
     public enum ePopupType
     {
         ePopupType_DEFAULT, //  popup with text
 
         ePopupType_COUNT
-    }
-
-    public struct sPopupInfos
-    {
-        string title;
-        string content;
-
-        dPopupCallback callback1;
-        dPopupCallback callback2;
-
     }
 
     //  TODO aherrera : POPUP INFOS
@@ -41,16 +29,6 @@ public class PopupModel : MonoBehaviour
     {
 		
 	}
-
-    public void InitializePopup()
-    {
-        OnPopupInitialize();
-    }
-
-    protected void OnPopupInitialize()
-    {
-
-    }
 
     
 

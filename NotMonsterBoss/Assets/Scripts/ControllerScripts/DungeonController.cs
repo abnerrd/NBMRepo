@@ -7,8 +7,6 @@ public class DungeonController : MonoBehaviour
     private DungeonView mDungeonView;
     private DungeonModel mDungeonModel;
 
-    private PopupController mPopupController;
-
     public GameObject RoomPrefab;
     public GameObject BossRoomPrefab;
     public GameObject MainCanvas;
@@ -23,23 +21,15 @@ public class DungeonController : MonoBehaviour
         mState = eControllerState.eControllerState_CREATED;
 
         mDungeonView = this.gameObject.GetComponent<DungeonView>();
+        mDungeonModel = this.gameObject.GetComponent<DungeonModel>();
         if (mDungeonView == null)
         {
             mDungeonView = this.gameObject.AddComponent<DungeonView>();
         }
-
-        mDungeonModel = this.gameObject.GetComponent<DungeonModel>();
         if (mDungeonModel == null)
         {
             mDungeonModel = this.gameObject.AddComponent<DungeonModel>();
         }
-
-        mPopupController = this.gameObject.GetComponent<PopupController>();
-        if(mPopupController == null)
-        {
-            mPopupController = this.gameObject.AddComponent<PopupController>();
-        }
-
     }
 
     private void Start()
