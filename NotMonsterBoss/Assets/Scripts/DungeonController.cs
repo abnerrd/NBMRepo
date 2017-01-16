@@ -8,21 +8,14 @@ public class DungeonController : MonoBehaviour
     private DungeonModel mDungeonModel;
 
     public GameObject RoomPrefab;
+    public GameObject DungeonPrefab;
     public GameObject BossRoomPrefab;
     public GameObject MainCanvas;
 
 
-    //  TODO aherrera : should consider putting this in a BaseController class
-    eControllerState mState;
-
-
     void Awake ()
     {
-        mState = eControllerState.eControllerState_CREATED;
-
-        mDungeonView = this.gameObject.GetComponent<DungeonView>();
-        mDungeonModel = this.gameObject.GetComponent<DungeonModel>();
-        if (mDungeonView == null)
+		if (mDungeonView == null)
         {
             mDungeonView = this.gameObject.AddComponent<DungeonView>();
         }
@@ -30,6 +23,8 @@ public class DungeonController : MonoBehaviour
         {
             mDungeonModel = this.gameObject.AddComponent<DungeonModel>();
         }
+
+        InitializeDungeon();
     }
 
     private void Start()
@@ -39,23 +34,12 @@ public class DungeonController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        //  TODO aherrera : create a method for this pls..
-        if(mState == eControllerState.eControllerState_READY_TO_INITIALIZE)
-        {
-            CreateDungeonObject();
-            mState = eControllerState.eControllerState_ACTIVE;
-        }
+		
 	}
 
-    public void InitializeDungeon(GameObject main_canvas)
-    {
-        MainCanvas = main_canvas;
-        mState = eControllerState.eControllerState_READY_TO_INITIALIZE;
-    }
-
-    protected void CreateDungeonObject()
-    {
-        //    GameObject playerDungeon = Instantiate(DungeonPrefab);
+    public void InitializeDungeon()
+    { 
+        GameObject playerDungeon = Instantiate(DungeonPrefab);
         RectTransform mc = MainCanvas.GetComponent<RectTransform>();
         mDungeonModel = mDungeonModel.GetComponent<DungeonModel>();
         mDungeonModel.init(mc);
