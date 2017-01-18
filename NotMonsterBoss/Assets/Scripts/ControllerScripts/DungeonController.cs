@@ -7,24 +7,39 @@ public class DungeonController : MonoBehaviour
     private DungeonView mDungeonView;
     private DungeonModel mDungeonModel;
 
+    private PopupController mPopupController;
+
     public GameObject RoomPrefab;
-    public GameObject DungeonPrefab;
     public GameObject BossRoomPrefab;
     public GameObject MainCanvas;
 
 
+    //  TODO aherrera : should consider putting this in a BaseController class
+    eControllerState mState;
+
+
     void Awake ()
     {
-		if (mDungeonView == null)
+        mState = eControllerState.eControllerState_CREATED;
+
+        mDungeonView = this.gameObject.GetComponent<DungeonView>();
+        if (mDungeonView == null)
         {
             mDungeonView = this.gameObject.AddComponent<DungeonView>();
         }
+
+        mDungeonModel = this.gameObject.GetComponent<DungeonModel>();
         if (mDungeonModel == null)
         {
             mDungeonModel = this.gameObject.AddComponent<DungeonModel>();
         }
 
-        InitializeDungeon();
+        mPopupController = this.gameObject.GetComponent<PopupController>();
+        if(mPopupController == null)
+        {
+            mPopupController = this.gameObject.AddComponent<PopupController>();
+        }
+
     }
 
     private void Start()
@@ -34,12 +49,23 @@ public class DungeonController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-		
+        //  TODO aherrera : create a method for this pls..
+        if(mState == eControllerState.eControllerState_READY_TO_INITIALIZE)
+        {
+            CreateDungeonObject();
+            mState = eControllerState.eControllerState_ACTIVE;
+        }
 	}
 
-    public void InitializeDungeon()
-    { 
-        GameObject playerDungeon = Instantiate(DungeonPrefab);
+    public void InitializeDungeon(GameObject main_canvas)
+    {
+        MainCanvas = main_canvas;
+        mState = eControllerState.eControllerState_READY_TO_INITIALIZE;
+    }
+
+    protected void CreateDungeonObject()
+    {
+        //    GameObject playerDungeon = Instantiate(DungeonPrefab);
         RectTransform mc = MainCanvas.GetComponent<RectTransform>();
         mDungeonModel = mDungeonModel.GetComponent<DungeonModel>();
         mDungeonModel.init(mc);
