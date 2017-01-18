@@ -59,4 +59,14 @@ public class GameController : MonoBehaviour
 
     }
 
+    public void AddRandomRoom()
+    {
+        m_playerDungeon.AddRandomRoom();
+    }
+
+    public void AddRandomPacket()
+    {
+        m_playerDungeon.AddRandomPacket();
+    }
+
 }

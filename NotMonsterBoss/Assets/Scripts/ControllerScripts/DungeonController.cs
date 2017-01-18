@@ -9,9 +9,11 @@ public class DungeonController : MonoBehaviour
 
     private PopupController mPopupController;
 
+    //  TODO aherrera : to be removed probably into GameController; he calls the shots
     public GameObject RoomPrefab;
     public GameObject BossRoomPrefab;
-    public GameObject MainCanvas;
+
+    private GameObject MainCanvas;
 
 
     //  TODO aherrera : should consider putting this in a BaseController class
