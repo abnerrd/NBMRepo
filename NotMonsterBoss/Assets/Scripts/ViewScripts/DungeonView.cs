@@ -39,8 +39,6 @@ public class DungeonView : MonoBehaviour
 
 
 
-
-
     // Use this for initialization
     void Awake ()
     {

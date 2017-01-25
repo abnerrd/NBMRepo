@@ -7,8 +7,6 @@ public class DungeonController : MonoBehaviour
     private DungeonView mDungeonView;
     private DungeonModel mDungeonModel;
 
-    private PopupController mPopupController;
-
     //  TODO aherrera : to be removed probably into GameController; he calls the shots
     public GameObject RoomPrefab;
     public GameObject BossRoomPrefab;
@@ -35,13 +33,6 @@ public class DungeonController : MonoBehaviour
         {
             mDungeonModel = this.gameObject.AddComponent<DungeonModel>();
         }
-
-        mPopupController = this.gameObject.GetComponent<PopupController>();
-        if(mPopupController == null)
-        {
-            mPopupController = this.gameObject.AddComponent<PopupController>();
-        }
-
     }
 
     private void Start()

@@ -69,4 +69,15 @@ public class GameController : MonoBehaviour
         m_playerDungeon.AddRandomPacket();
     }
 
+    public void PopupPooper()
+    {
+        PopupModel.sPopupInfos popup_params = new PopupModel.sPopupInfos();
+        popup_params.title = "Poop Popup";
+        popup_params.content = "Toilet humor";
+
+        //  IF(when) I want to add a callback, I'd do it here. To some method in the DungeonController.
+
+        PopupController.instance.AddPopup(popup_params);
+    }
+
 }

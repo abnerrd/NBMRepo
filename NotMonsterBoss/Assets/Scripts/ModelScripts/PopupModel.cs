@@ -19,11 +19,11 @@ public class PopupModel : MonoBehaviour
 
     public struct sPopupInfos
     {
-        string title;
-        string content;
+        public string title;
+        public string content;
 
-        dPopupCallback callback1;
-        dPopupCallback callback2;
+        public dPopupCallback callback1;
+        public dPopupCallback callback2;
 
     }
 

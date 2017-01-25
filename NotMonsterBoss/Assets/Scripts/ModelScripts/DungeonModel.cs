@@ -29,6 +29,7 @@ public class DungeonModel : MonoBehaviour
     /// </summary>
     protected Dictionary<string, AdventurerPacket> m_questingParties;
 
+    //  TODO aherrera, wspier : DungeonModel should not have a reference to DungeonView. It should be handled by the DungeonController to adjust both.
     private DungeonView m_view;
     public void SetView (DungeonView view)
     {
@@ -66,6 +67,7 @@ public class DungeonModel : MonoBehaviour
         pd_transform.SetParent (MainCanvas, false);
         pd_transform.SetAsFirstSibling ();
         pd_transform.rect.size.Set (MainCanvas.rect.size.x, MainCanvas.rect.size.y);
+       // pd_transform.
         m_view = GetComponent<DungeonView> ();
     }
 
