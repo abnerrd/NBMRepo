@@ -41,24 +41,10 @@ public class PopupView : MonoBehaviour
     /// Do any "closing" items you want to take care of here.
     /// Does NOT destroy Gameobject. PopupController takes care of that.
     /// </summary>
-    public void ClosePopup()
+    public void BTN_ClosePopup()
     {
-        SetEnabled(false);
-    }
-
-    public void OnCloseButton()
-    {
-        //  TODO aherrera : callback to Controller method to tell Model method that SOMETHING just happened.
-        //                  and then the MODEL has ANOTHER callback to that is already assigned.
-        ClosePopup();
-    }
-
-    public void OnOkButton()
-    {
-        //  TODO aherrera : callback to Controller method to tell Model method that SOMETHING just happened.
-        //                  and then the MODEL has ANOTHER callback to that is already assigned.
-                    //      callback or Event?
-        ClosePopup();
+        ToggleInput(false);
+        PopupController.instance.ClosePopup(this.gameObject);
     }
 
     /// <summary>
