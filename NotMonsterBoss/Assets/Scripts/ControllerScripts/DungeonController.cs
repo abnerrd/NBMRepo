@@ -77,16 +77,18 @@ public class DungeonController : MonoBehaviour
         mDungeonModel.AddRoomToDungeon(new_room_prefab);
     }
 
-    public string AddNewPacket(AdventurerPacket party_packet, bool automatic_start = false)
+    public string AddNewParty(GameObject party, bool automatic_start = false)
     {
-        DebugLogger.DebugSystemMessage("Inserting " + party_packet.adventureTitle + " Party to Dungeon");
+        PartyController pc = party.GetComponent<PartyController> ();
+        PartyModel pm = party.GetComponent<PartyModel> ();
+        DebugLogger.DebugSystemMessage("Inserting " + pm._AdventureTitle + " Party to Dungeon");
 
-        party_packet.RegisterToEvent_TimerComplete(HandlePacketTimerUp);
-        string newPacketKey = mDungeonModel.AddPartyToDungeon(party_packet);
+        pc.RegisterToEvent(HandlePacketTimerUp);
+        string newPacketKey = mDungeonModel.AddPartyToDungeon(party);
 
         if (automatic_start)
         {
-            StartPacket(newPacketKey);
+            mDungeonModel.StartPartyPacket (newPacketKey);
         }
 
         return newPacketKey;
@@ -100,16 +102,11 @@ public class DungeonController : MonoBehaviour
 
     public void RemovePacket(string packet_key)
     {
-        AdventurerPacket packet_to_remove = mDungeonModel.RemovePartyFromDungeon(packet_key);
-
+        GameObject party_to_remove = mDungeonModel.RemovePartyFromDungeon(packet_key);
+        PartyController p = party_to_remove.GetComponent<PartyController> ();
         //  RISK aherrera : is this gonna work? Like, since we're not really returning a reference
         //                      to packet_to_remove, will it unregister from the Packet correctly?
-        packet_to_remove.UnregisterToEvent_TimerComplete(HandlePacketTimerUp);
-    }
-
-    protected void StartPacket(string packet_key)
-    {
-        mDungeonModel.StartPartyPacket(packet_key);
+        p.UnRegisterToEvent(HandlePacketTimerUp);
     }
 
     //  TODO aherrera : DEBUG SCRIPT
@@ -124,16 +121,20 @@ public class DungeonController : MonoBehaviour
     }
 
     //  TODO aherrera : DEBUG SCRIPT
-    public void AddRandomPacket()
+    public void AddRandomParty()
     {
-        AdventurerModel new_model = AdventurerGenerator.instance.GenerateRandom(1, Enums.UnitRarity.e_rarity_COMMON);
-        GameObject go_adventurerpacket = new GameObject();
-        AdventurerPacket newpackofcigs = go_adventurerpacket.AddComponent<AdventurerPacket>();
-        go_adventurerpacket.name = "AD_PACK: " + newpackofcigs.adventureTitle;
-        newpackofcigs.initializePacket("cig crew");
-        newpackofcigs.adventurers.Add(new_model);
+        GameObject new_Adventurer = new GameObject ();
+        AdventurerModel new_model = new_Adventurer.AddComponent<AdventurerModel>(AdventurerGenerator.instance.GenerateRandom(1, Enums.UnitRarity.e_rarity_COMMON));
+        GameObject new_party = new GameObject();
+        PartyModel go_pm = new_party.AddComponent<PartyModel> ();
+        PartyController go_pc = new_party.AddComponent<PartyController> ();
 
-        AddNewPacket(newpackofcigs, true);
+        //AdventurerPacket newpackofcigs = go_adventurerpacket.AddComponent<AdventurerPacket>();
+        new_party.name = "AD_PACK: " + go_pm._AdventureTitle;
+        go_pc.InitializeParty("cig crew");
+        go_pm._Adventurers.Add(new_Adventurer);
+
+        AddNewParty(new_party, true);
     }
 
     protected void HandlePacketTimerUp(string packet_key)

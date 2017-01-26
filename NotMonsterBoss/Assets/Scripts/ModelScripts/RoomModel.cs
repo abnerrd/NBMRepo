@@ -168,13 +168,14 @@ public class RoomModel : MonoBehaviour
         return retval;
     }
 
-    public virtual bool challengeParty (List<AdventurerModel> adventureParty)
+    public virtual bool challengeParty (List<GameObject> adventureParty)
     {
         bool retval = true;
 
-        foreach (AdventurerModel adventurer in adventureParty) {
-            if (!adventurer.isDead) {
-                if (!challengeAdventurer (adventurer)) {
+        foreach (GameObject adventurer in adventureParty) {
+            AdventurerModel a = adventurer.GetComponent<AdventurerModel> ();
+            if (!a.isDead) {
+                if (!challengeAdventurer (a)) {
                     //Adventurer has lost
                     retval = false;
                     break;

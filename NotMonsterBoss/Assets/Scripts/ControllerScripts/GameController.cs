@@ -66,7 +66,7 @@ public class GameController : MonoBehaviour
 
     public void AddRandomPacket()
     {
-        m_playerDungeon.AddRandomPacket();
+        m_playerDungeon.AddRandomParty();
     }
 
     public void PopupPooper()
