@@ -42,12 +42,16 @@ public class DungeonController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        //  TODO aherrera : create a method for this pls..
+        //  TODO aherrera : create a method for this pls.. (something like "change state")
         if(mState == eControllerState.eControllerState_READY_TO_INITIALIZE)
         {
             CreateDungeonObject();
             mState = eControllerState.eControllerState_ACTIVE;
         }
+
+
+        
+
 	}
 
     public void InitializeDungeon(GameObject main_canvas)
@@ -85,12 +89,7 @@ public class DungeonController : MonoBehaviour
 
         pc.RegisterToEvent(HandlePacketTimerUp);
         string newPacketKey = mDungeonModel.AddPartyToDungeon(party);
-
-        if (automatic_start)
-        {
-            mDungeonModel.StartPartyPacket (newPacketKey);
-        }
-
+        
         return newPacketKey;
     }
 
@@ -120,7 +119,7 @@ public class DungeonController : MonoBehaviour
         AddNewRoom(newRoomPrefab);
     }
 
-    //  TODO aherrera : DEBUG SCRIPT
+    //  TODO aherrera : DEBUG SCRIPT; kill this before it's too late
     public void AddRandomParty()
     {
         GameObject new_Adventurer = new GameObject ();
@@ -131,10 +130,13 @@ public class DungeonController : MonoBehaviour
 
         //AdventurerPacket newpackofcigs = go_adventurerpacket.AddComponent<AdventurerPacket>();
         new_party.name = "AD_PACK: " + go_pm._AdventureTitle;
-        go_pc.InitializeParty("cig crew");
+        go_pc.InitializeParty();
         go_pm._Adventurers.Add(new_Adventurer);
 
+        RoomModel room_model = mDungeonModel.GetRoom(go_pc.GetCurrentRoomIndex());
+
         AddNewParty(new_party, true);
+        go_pc.BeginRoom(room_model.timer_frequency);
     }
 
     protected void HandlePacketTimerUp(string packet_key)

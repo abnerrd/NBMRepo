@@ -53,12 +53,13 @@ public class PartyController : MonoBehaviour {
         }
         return true;
     }
-
-	// Use this for initialization
-	void Start () {
+    
+	void Awake () {
         
+        //  TODO aherrera : fix this title initialize
         //Store reference of THIS model
         mModel = gameObject.GetComponent<PartyModel> ();
+        mModel._AdventureTitle = "dingus";
 	}
 
     public void InternalUpdate ()
@@ -66,13 +67,12 @@ public class PartyController : MonoBehaviour {
         mModel._Timer.InternalUpdate ();
     }
 
-    public void InitializeParty (string adventureTitle = "Default")
+    public void InitializeParty ()
     {
         //Register TimerComplete Event
         mModel._Timer.RegisterToEvent (TimerComplete);
         mModel._State = PartyState.PARTY_NOT_STARTED;
         mModel._CurrentRoomIndex = 0;
-        mModel._AdventureTitle = adventureTitle;
     }
 
     public void BeginRoom (int room_time)

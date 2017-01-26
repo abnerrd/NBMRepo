@@ -63,7 +63,7 @@ public class PartyModel : MonoBehaviour {
 
     public int GetPartyCount { get { return _Adventurers.Count; } }
 
-    void Start ()
+    void Awake ()
     {
         _Timer.Pause ();
         _Adventurers = new List<GameObject> ();

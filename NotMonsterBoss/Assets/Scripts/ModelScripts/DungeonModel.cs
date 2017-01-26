@@ -58,7 +58,15 @@ public class DungeonModel : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-		
+		//  TODO aherrera : don't put this here
+        foreach(GameObject go in m_questingParties.Values)
+        {
+            PartyController pc = go.GetComponent<PartyController>();
+            if(pc != null)
+            {
+                pc.InternalUpdate();
+            }
+        }
 	}
 
     public void init (RectTransform MainCanvas)
@@ -132,25 +140,11 @@ public class DungeonModel : MonoBehaviour
     /// Party Methods
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    /// <summary>
-    /// Call this method AFTER the packet is added!
-    /// </summary>
-    public void StartPartyPacket(string packet_key)
-    {
-        if(m_questingParties.ContainsKey(packet_key))
-        {
-            PartyController party = m_questingParties [packet_key].GetComponent<PartyController> ();
-            party.InitializeParty(packet_key);
-        }
-        else { Debug.LogError("DungeonModel::StartPartyPacket -- packet not found with key: " + packet_key); }
-    }
-
     public string AddPartyToDungeon(GameObject new_party)
     {
-        //  TODO aherrera : HEY pls randomize me
+        PartyController pc = new_party.GetComponent<PartyController>();
         //  TODO aherrera : probably make sure i'm unique
-        string packet_key = "BEST KEY";
+        string packet_key = pc.GetAdventureTitle();
         m_questingParties.Add(packet_key, new_party);
         
         InitializePacketToRoom(packet_key, GetEntrance());
