@@ -77,7 +77,7 @@ public class PartyController : MonoBehaviour {
 
     public void BeginRoom (int room_time)
     {
-        mModel._Timer._TargetTimestamp = Helper.Epoch.GetEpochTimestamp (room_time);
+        SetRoomTimer(Helper.Epoch.GetEpochTimestamp(room_time));
         mModel._Timer.Start ();
         mModel._State = PartyState.PARTY_IN_PROGRESS;
     }

@@ -330,7 +330,7 @@ public class DungeonModel : MonoBehaviour
 
         if (current_room_reference != null)
         {
-            party.SetRoomTimer(current_room_reference.timer_frequency);
+            party.SetRoomTimer(Helper.Epoch.GetEpochTimestamp(current_room_reference.timer_frequency));
         }
         else { Debug.LogError("DungeonModel::InitializePacketToCurrentRoom -- currentroom not found for string: " + packet_key); }
 
