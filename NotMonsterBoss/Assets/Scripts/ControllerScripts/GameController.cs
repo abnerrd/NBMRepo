@@ -80,4 +80,9 @@ public class GameController : MonoBehaviour
         PopupController.instance.AddPopup(popup_params);
     }
 
+    public void AlertPooper()
+    {
+        NewsFeedController.instance.AddNewAlert("POOP ALERT!");
+    }
+
 }

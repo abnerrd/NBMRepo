@@ -48,10 +48,6 @@ public class DungeonController : MonoBehaviour
             CreateDungeonObject();
             mState = eControllerState.eControllerState_ACTIVE;
         }
-
-
-        
-
 	}
 
     public void InitializeDungeon(GameObject main_canvas)
