@@ -8,16 +8,16 @@ public class NewsFeedController : MonoBehaviour
 { 
     public static NewsFeedController instance = null;
 
+    public NewsFeedModel mModel;
+    public NewsFeedView mView;
+
     //  TODO aherrera : replace this with a reference to Resources.?
     public GameObject _AlertFeedPrefab;
 
+    //  TODO aherrera : does this reference to the container object need to be in Controller, or Model?
     protected GameObject mAlertsContainer;
     public Transform _ShowFeedPoint;
     public Transform _HideFeedPoint;
-
-    private List<GameObject> mAlertsList;
-
-    private bool mShowAlerts = false;
 
     private void Awake()
     {
@@ -30,12 +30,21 @@ public class NewsFeedController : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        mAlertsList = new List<GameObject>();
-
-        if(mAlertsContainer == null)
+        mView = this.gameObject.GetComponent<NewsFeedView>();
+        if (mView == null)
         {
-            mAlertsContainer = new GameObject();
-            mAlertsContainer.name = "Alerts Container";
+            mView = this.gameObject.AddComponent<NewsFeedView>();
+        }
+
+        mModel = this.gameObject.GetComponent<NewsFeedModel>();
+        if (mModel == null)
+        {
+            mModel = this.gameObject.AddComponent<NewsFeedModel>();
+        }
+
+        if (mAlertsContainer == null)
+        {
+            mAlertsContainer = new GameObject("Alerts Container", typeof(RectTransform));
             mAlertsContainer.transform.SetParent(this.transform);
 
             //  TODO aherrera : change this when it's not just appearing/disappearing
@@ -55,7 +64,7 @@ public class NewsFeedController : MonoBehaviour
 		
 	}
 
-    public void AddNewAlert(string message)
+    public void CreateNewAlert(string message)
     {
         //  TODO aherrera : Create "AlertModel", view, controller? For more control over what we can do with these alerts? Like buttons, callbacks, etc.?
         //                  It'll provide some headache relief to getting the Text in following way
@@ -63,31 +72,16 @@ public class NewsFeedController : MonoBehaviour
         Text alert_message = new_alert_go.transform.FindChild("Text").GetComponent<Text>();
         alert_message.text = message;
 
-        mAlertsList.Add(new_alert_go);
-
+        mModel.AddNewAlert(new_alert_go);
         new_alert_go.transform.SetParent(mAlertsContainer.transform);
-        new_alert_go.transform.localPosition = Vector3.zero;
-        
-        Vector3 new_position = new_alert_go.transform.position;
-        foreach (GameObject go in mAlertsList)
-        {
-            new_position.y += 30;
-        }
-        new_alert_go.transform.position = new_position;
-
-        new_alert_go.SetActive(mShowAlerts);
-
-        if(mShowAlerts)
-        {
-            //  Position accordingly!
-        }
+        mModel.PositionAlerts();
     }
 
     protected GameObject GetNewestAlert()
     {
-        if(mAlertsList.Count > 0)
+        if(mModel.AlertsList.Count > 0)
         {
-            return mAlertsList[mAlertsList.Count - 1];
+            return mModel.AlertsList[mModel.AlertsList.Count - 1];
         }
         else
         {
@@ -97,23 +91,24 @@ public class NewsFeedController : MonoBehaviour
 
     protected GameObject GetOldestAlert()
     {
-        return mAlertsList[0];
+        return mModel.AlertsList[0];
     }
 
     public void ToggleAlerts()
     {
-        ShowAlerts(!mShowAlerts);
+        mModel.SetShowAlerts(!mModel.ShowAlerts);
     }
 
     public void ShowAlerts(bool show_alerts)
     {
-        mShowAlerts = show_alerts;
-
-        //  set alerts as Visible/Invisible
-        foreach (GameObject go in mAlertsList)
+        NewsFeedModel model = this.GetComponent<NewsFeedModel>();
+        if(model != null)
         {
-            //  TODO aherrera : access something else just to set as visible/invisible? or is SetActive() enough?
-            go.SetActive(show_alerts);
+            model.SetShowAlerts(show_alerts);
+        }
+        else
+        {
+            Debug.LogError("NewsFeedController::ShowAlerts -- GameObject does not have \"Model\" reference!");
         }
 
         if (show_alerts)

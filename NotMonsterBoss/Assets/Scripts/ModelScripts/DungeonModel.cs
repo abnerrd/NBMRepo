@@ -17,24 +17,13 @@ public class DungeonModel : MonoBehaviour
     /// </summary>
     //  TODO aherrera : replace with RoomModels
     protected List<RoomModel> m_roomList;
+    public int RoomCount { get { return m_roomList.Count; } }
 
     //  TODO aherrera, wspier : should this be handled by RoomModels only instead?
     /// <summary>
     /// List of all Minions within the Dungeon.
     /// </summary>
     protected List<MinionModel> m_allMinions;
-
-    /// <summary>
-    /// List of all groups of adventurers currently progressing through the Dungeon.
-    /// </summary>
-    protected Dictionary<string, GameObject> m_questingParties;
-
-    //  TODO aherrera, wspier : DungeonModel should not have a reference to DungeonView. It should be handled by the DungeonController to adjust both.
-    private DungeonView m_view;
-    public void SetView (DungeonView view)
-    {
-        m_view = view;
-    }
 
     public int GetRoomCount ()
     {
@@ -46,7 +35,6 @@ public class DungeonModel : MonoBehaviour
         //  TODO aherrera : move these into an initialize script
         m_roomList = new List<RoomModel>();
         m_allMinions = new List<MinionModel>();
-        m_questingParties = new Dictionary<string, GameObject>();
     }
 
     // Use this for initialization
@@ -54,29 +42,10 @@ public class DungeonModel : MonoBehaviour
     {
         
 	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		//  TODO aherrera : don't put this here
-        foreach(GameObject go in m_questingParties.Values)
-        {
-            PartyController pc = go.GetComponent<PartyController>();
-            if(pc != null)
-            {
-                pc.InternalUpdate();
-            }
-        }
-	}
 
-    public void init (RectTransform MainCanvas)
+    // Update is called once per frame
+    void Update()
     {
-        RectTransform pd_transform = GetComponent<RectTransform> ();
-        pd_transform.SetParent (MainCanvas, false);
-        pd_transform.SetAsFirstSibling ();
-        pd_transform.rect.size.Set (MainCanvas.rect.size.x, MainCanvas.rect.size.y);
-       // pd_transform.
-        m_view = GetComponent<DungeonView> ();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +55,6 @@ public class DungeonModel : MonoBehaviour
     public void AddRoomToDungeon(GameObject new_room)
     {
         m_roomList.Add(new_room.GetComponent<RoomModel>());
-        m_view.AddRoom (new_room);
     }
 
     //  TODO aherrear, wspier : Should this "blank" the room, or explicitly destroy room and shorten Dungeon
@@ -136,46 +104,7 @@ public class DungeonModel : MonoBehaviour
         return m_roomList.Count - 1;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// Party Methods
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public string AddPartyToDungeon(GameObject new_party)
-    {
-        PartyController pc = new_party.GetComponent<PartyController>();
-        //  TODO aherrera : probably make sure i'm unique
-        string packet_key = pc.GetAdventureTitle();
-        m_questingParties.Add(packet_key, new_party);
-        
-        InitializePacketToRoom(packet_key, GetEntrance());
-
-        return packet_key;
-    }
     
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="packet_key"></param>
-    /// <returns>Returns reference to removed packet</returns>
-    public GameObject RemovePartyFromDungeon(string packet_key)
-    {
-        GameObject return_value = null;
-        if (m_questingParties.ContainsKey(packet_key))
-        {
-            return_value = m_questingParties[packet_key];
-            m_questingParties.Remove(packet_key);
-        }
-        else
-        {
-            DebugLogger.DebugSystemMessage("DungeonModel::RemovePartyFromDungeon -- party to destroy not in List!");
-        }
-        return return_value;
-    }
-
-    public List<string> GetPacketKeysList()
-    {
-        return new List<string>(m_questingParties.Keys);
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Minion Methods
@@ -207,132 +136,5 @@ public class DungeonModel : MonoBehaviour
 
         //  TODO aherrera : Remove Minion from RoomModel
     }
-
-
-
-    /////////////////////////////////////
-    /// METHODS THAT COULD POSSIBLY NOT BELONG IN A MODEL?
-    /////////////////////////////////////
-
-
-
-    //TODO Should be in DungeonController.cs
-    /// <summary>
-    /// Challenge packet to their CurrentRoom.
-    /// Returns : TRUE if party is still ALIVE
-    /// </summary>
-    /// <param name="packet_key"></param>
-    /// <returns>Returns TRUE if the party is ALIVE</returns>
-    public bool ChallengePacketInCurrentRoom(string packet_key)
-    {
-        GameObject party_object = m_questingParties[packet_key];
-        PartyController party = party_object.GetComponent<PartyController> ();
-        if(party != null)
-        {
-            RoomModel party_current_room = GetRoom(party.GetCurrentRoomIndex());
-            if (party_current_room != null)
-            {
-                bool challenge_successful = party_current_room.challengeParty(party.GetAdventurers());
-                if (challenge_successful)
-                {
-                    //party_packet.AwardPacket(party_current_room);
-                }
-                else
-                {
-                    ResolveChallengeFailure (party, party_current_room);
-
-                }
-            }
-            else { Debug.LogError ("DungeonModel::ChallengePacketInCurrentRoom -- room not in list from packet: " + party.GetAdventureTitle ()); }
-
-            //  TODO aherrera, wspier : like, should this logic be in the Model?? Should it be in charge to figure it out?
-            if(party.isPartyDead())
-            {
-                party.SetState(PartyState.PARTY_FAILED);
-            }
-
-            return !party.isPartyDead();
-        }
-        else { Debug.LogError("DungeonModel::ChallengePacketInCurrentRoom -- packet not found in list with string: " + packet_key); }
         
-    //  Hey! Pls don't come here okay thanks                     
-        return false;
-    }
-
-    public void ResolveChallengeFailure (PartyController party, RoomModel room)
-    {
-        foreach (GameObject adventurer in party.GetAdventurers ())
-        {
-            AdventurerModel a = adventurer.GetComponent<AdventurerModel> ();
-            a.applyDamage (room.room_attack);
-        }
-    }
-
-    /// <summary>
-    /// Advances Packet to the next room.
-    /// Updates packet with new room data.
-    /// Returns : TRUE if packet has completed dungeon
-    /// </summary>
-    /// <param name="packet"></param>
-    public bool UpdatePacketToNextRoom(string packet_key)
-    {
-        PartyController party = m_questingParties [packet_key].GetComponent<PartyController> ();
-        if (party != null)
-        {
-            //  We move in the list from last->first
-            bool completed_dungeon = (0 > party.AdvanceRoom());
-
-            if(completed_dungeon)
-            {
-                //  TODO aherrera : Party has defeated the boss? 
-                party.SetState (PartyState.PARTY_SUCCESS);
-            }
-            else
-            {
-                RoomModel party_new_current_room = GetRoom(party.GetCurrentRoomIndex());
-                if (party_new_current_room != null)
-                {
-                    InitializePacketToRoom(packet_key);
-                }
-            }
-
-            return completed_dungeon;
-        }else { Debug.LogError("DungeonModel::UpdatePacketToNextRoom -- packet not found in list with string: " + packet_key); }
-
-        //  Hey pls don't be here
-        //  TODO aherrera : handle these kinds of errors to search out and erase traces of this packet?
-        return false;
-    }
-
-    /// <summary>
-    /// Initialize Packet data to it's Current Room.
-    /// Optional param sets to given room index
-    /// </summary>
-    /// <param name="packet_key"></param>
-    /// <param name="new_room_index">optional; sets the packet to this room index</param>
-    public void InitializePacketToRoom(string packet_key, int new_room_index = -1)
-    {
-        PartyController party = m_questingParties[packet_key].GetComponent<PartyController>();
-
-        //  TODO aherrera, wspier : should 0 be allowed? That would mean fighting Boss Room right away
-        if(new_room_index >= 0)
-        {
-            party.SetCurrentRoomIndex( new_room_index) ;
-        }
-
-        //  TODO aherrera : replace this check with something more elegant :/
-        if(new_room_index >= m_roomList.Count)
-        {
-            Debug.LogError("GIVEN INDEX LARGER THAN ARRAY SIZE");
-        }
-        
-        RoomModel current_room_reference = m_roomList[party.GetCurrentRoomIndex()];
-
-        if (current_room_reference != null)
-        {
-            party.SetRoomTimer(Helper.Epoch.GetEpochTimestamp(current_room_reference.timer_frequency));
-        }
-        else { Debug.LogError("DungeonModel::InitializePacketToCurrentRoom -- currentroom not found for string: " + packet_key); }
-
-    }
 }

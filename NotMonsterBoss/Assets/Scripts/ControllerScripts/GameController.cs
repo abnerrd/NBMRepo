@@ -82,7 +82,7 @@ public class GameController : MonoBehaviour
 
     public void AlertPooper()
     {
-        NewsFeedController.instance.AddNewAlert("POOP ALERT!");
+        NewsFeedController.instance.CreateNewAlert("POOP ALERT!");
     }
 
 }

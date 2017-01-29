@@ -2,15 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewsFeedView : MonoBehaviour {
+public class NewsFeedView : MonoBehaviour
+{
 
-	// Use this for initialization
-	void Start () {
+    private bool mShowAlerts = false;
+    public bool ShowAlerts { get { return mShowAlerts; } }
+
+    // Use this for initialization
+    void Start ()
+    {
 		
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
 		
 	}
 }

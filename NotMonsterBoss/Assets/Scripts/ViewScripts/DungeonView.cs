@@ -51,4 +51,21 @@ public class DungeonView : MonoBehaviour
     {
 
     }
+
+    //  TODO aherrera : toook this out from DungeonModel.init 
+    public void initialize(RectTransform MainCanvas)
+    {
+        RectTransform pd_transform = GetComponent<RectTransform>();
+        pd_transform.SetParent(MainCanvas, false);
+        pd_transform.SetAsFirstSibling();
+        pd_transform.rect.size.Set(MainCanvas.rect.size.x, MainCanvas.rect.size.y);
+        // pd_transform.
+        
+    }
+
+    //  TODO aherrera : rename this? or something?
+    public void AddRoomToDungeon(GameObject room_obj)
+    {
+       AddRoom(room_obj);
+    }
 }
