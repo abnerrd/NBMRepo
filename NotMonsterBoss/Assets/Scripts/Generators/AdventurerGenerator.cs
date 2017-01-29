@@ -46,10 +46,10 @@ public class AdventurerGenerator : MonoBehaviour
         return adventurerScript;
     }
 
-    public AdventurerModel GenerateRandom (int level, Enums.UnitRarity rarity)
+    public AdventurerModel GenerateRandom (ref GameObject roomObject, int level, Enums.UnitRarity rarity)
     {
-        GameObject newAdventurer = new GameObject ();
-        AdventurerModel adventurerScript = newAdventurer.AddComponent<AdventurerModel> ();
+        //GameObject newAdventurer = new GameObject ();
+        AdventurerModel adventurerScript = roomObject.AddComponent<AdventurerModel> ();
 
         NameData name = dataBase.GetRandomName ();
 
@@ -62,19 +62,26 @@ public class AdventurerGenerator : MonoBehaviour
         float statMult = 1.0f,
               healthMult = 1.0f;
 
-        statMod += level;
+        statMod += (5 + level);
         healthMod += level * 5;
 
         switch (rarity) 
         {
+            case Enums.UnitRarity.e_rarity_COMMON:
+            statMult = 1f;
+            healthMult = 1f;
+            break;
+
             case Enums.UnitRarity.e_rarity_RARE:
             statMult = 1.1f;
             healthMult = 1.1f;
             break;
+
         case Enums.UnitRarity.e_rarity_EPIC:
             statMult = 1.3f;
             healthMult = 1.3f;
             break;
+
         case Enums.UnitRarity.e_rarity_LEGEND:
             statMult = 1.5f;
             healthMult = 1.5f;
@@ -94,7 +101,7 @@ public class AdventurerGenerator : MonoBehaviour
         adventurerScript.currentHealth = adventurerScript.totalHealth;
 
 
-        newAdventurer.name = adventurerScript._unitName + adventurerScript._unitNameDelim + adventurerScript._unitDescription;
+        roomObject.name = adventurerScript._unitName + adventurerScript._unitNameDelim + adventurerScript._unitDescription;
 
         return adventurerScript;
     }

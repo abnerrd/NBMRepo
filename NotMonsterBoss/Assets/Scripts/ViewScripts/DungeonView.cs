@@ -26,7 +26,7 @@ public class DungeonView : MonoBehaviour
         return new Vector2(mTransform.position.x, mTransform.position.y);
     }
 
-    public void AddRoom (GameObject newRoom)
+    public void AddRoomToDungeon (GameObject newRoom)
     {
         int roomCount = GetComponent<DungeonModel> ().GetRoomCount ();
         RectTransform newRect = newRoom.GetComponent<RectTransform> ();
@@ -61,11 +61,5 @@ public class DungeonView : MonoBehaviour
         pd_transform.rect.size.Set(MainCanvas.rect.size.x, MainCanvas.rect.size.y);
         // pd_transform.
         
-    }
-
-    //  TODO aherrera : rename this? or something?
-    public void AddRoomToDungeon(GameObject room_obj)
-    {
-       AddRoom(room_obj);
     }
 }

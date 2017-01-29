@@ -136,7 +136,7 @@ public class DungeonController : MonoBehaviour
     public void AddRandomParty()
     {
         GameObject new_Adventurer = new GameObject ();
-        AdventurerModel new_model = new_Adventurer.AddComponent<AdventurerModel>(AdventurerGenerator.instance.GenerateRandom(1, Enums.UnitRarity.e_rarity_COMMON));
+        AdventurerModel new_model = AdventurerGenerator.instance.GenerateRandom(ref new_Adventurer, 1, Enums.UnitRarity.e_rarity_COMMON);
         GameObject new_party = new GameObject();
         PartyModel go_pm = new_party.AddComponent<PartyModel> ();
         PartyController go_pc = new_party.AddComponent<PartyController> ();
