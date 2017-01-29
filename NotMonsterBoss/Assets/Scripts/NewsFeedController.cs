@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using UnityEngine.UI;
 
 public class NewsFeedController : MonoBehaviour
 { 
@@ -69,8 +68,12 @@ public class NewsFeedController : MonoBehaviour
         //  TODO aherrera : Create "AlertModel", view, controller? For more control over what we can do with these alerts? Like buttons, callbacks, etc.?
         //                  It'll provide some headache relief to getting the Text in following way
         GameObject new_alert_go = Instantiate(_AlertFeedPrefab);
-        Text alert_message = new_alert_go.transform.FindChild("Text").GetComponent<Text>();
-        alert_message.text = message;
+
+        FeedAlertModel alert_model = new_alert_go.AddComponent<FeedAlertModel>();
+        FeedAlertView alert_view = new_alert_go.AddComponent<FeedAlertView>();
+
+        alert_view.InitializeAlert(mAlertsContainer.GetComponent<RectTransform>());
+        alert_view.UpdateAlertText(message);
 
         mModel.AddNewAlert(new_alert_go);
         new_alert_go.transform.SetParent(mAlertsContainer.transform);
