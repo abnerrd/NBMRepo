@@ -36,9 +36,6 @@ public class DungeonView : MonoBehaviour
         newRect.position = new Vector2 (newRect.position.x, newRect.position.y - (mTransform.rect.height/ 8) * (roomCount-1) * newRect.lossyScale.y);
     }
 
-
-
-
     // Use this for initialization
     void Awake ()
     {
@@ -55,11 +52,11 @@ public class DungeonView : MonoBehaviour
     //  TODO aherrera : toook this out from DungeonModel.init 
     public void initialize(RectTransform MainCanvas)
     {
-        RectTransform pd_transform = GetComponent<RectTransform>();
-        pd_transform.SetParent(MainCanvas, false);
-        pd_transform.SetAsFirstSibling();
-        pd_transform.rect.size.Set(MainCanvas.rect.size.x, MainCanvas.rect.size.y);
-        // pd_transform.
-        
+        RectTransform transform = GetComponent<RectTransform>();
+        transform.SetParent(MainCanvas, false);
+        transform.SetAsFirstSibling();
+        transform.rect.size.Set(MainCanvas.rect.width+100, MainCanvas.rect.height+100);
+        transform.SetInsetAndSizeFromParentEdge (RectTransform.Edge.Top, MainCanvas.rect.height * 0.25f, MainCanvas.rect.height * 0.65f);
+        transform.SetInsetAndSizeFromParentEdge (RectTransform.Edge.Left, MainCanvas.rect.width * 0.2f, MainCanvas.rect.width * 0.65f);
     }
 }

@@ -7,8 +7,8 @@ public class NewsFeedController : MonoBehaviour
 { 
     public static NewsFeedController instance = null;
 
-    public NewsFeedModel mModel;
-    public NewsFeedView mView;
+    private NewsFeedModel mModel;
+    private NewsFeedView mView;
 
     //  TODO aherrera : replace this with a reference to Resources.?
     public GameObject _AlertFeedPrefab;
@@ -17,6 +17,8 @@ public class NewsFeedController : MonoBehaviour
     protected GameObject mAlertsContainer;
     public Transform _ShowFeedPoint;
     public Transform _HideFeedPoint;
+
+    public GameObject _MainCanvas;
 
     private void Awake()
     {
@@ -41,20 +43,19 @@ public class NewsFeedController : MonoBehaviour
             mModel = this.gameObject.AddComponent<NewsFeedModel>();
         }
 
-        if (mAlertsContainer == null)
-        {
-            mAlertsContainer = new GameObject("Alerts Container", typeof(RectTransform));
-            mAlertsContainer.transform.SetParent(this.transform);
 
-            //  TODO aherrera : change this when it's not just appearing/disappearing
-            mAlertsContainer.transform.position = _ShowFeedPoint.position;
-        }
     }
 
 	// Use this for initialization
 	void Start ()
     {
-		
+        mView.initialize (_MainCanvas);
+
+
+        mAlertsContainer = new GameObject ("Alerts Container", typeof (RectTransform));
+        mAlertsContainer.transform.SetParent (this.transform);
+
+        mView.initializeAlertContainer (mAlertsContainer);
 	}
 	
 	// Update is called once per frame
@@ -72,7 +73,7 @@ public class NewsFeedController : MonoBehaviour
         FeedAlertModel alert_model = new_alert_go.AddComponent<FeedAlertModel>();
         FeedAlertView alert_view = new_alert_go.AddComponent<FeedAlertView>();
 
-        alert_view.InitializeAlert(mAlertsContainer.GetComponent<RectTransform>());
+        alert_view.InitializeAlert(mAlertsContainer.GetComponent<RectTransform>(), mModel.AlertsList.Count);
         alert_view.UpdateAlertText(message);
 
         mModel.AddNewAlert(new_alert_go);

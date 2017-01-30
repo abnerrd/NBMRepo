@@ -19,17 +19,16 @@ public class FeedAlertView : MonoBehaviour
 		
 	}
 
-    public void InitializeAlert(RectTransform parent_transform)
+    public void InitializeAlert(RectTransform parent_transform, int numAlerts)
     {
         RectTransform newRect = GetComponent<RectTransform>();
         newRect.SetParent(parent_transform, false);
         newRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 1.0f, parent_transform.rect.width);
-        newRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 1.0f, (parent_transform.rect.height / 8));
-        //newRect.position = new Vector2(newRect.position.x, newRect.position.y - (mTransform.rect.height / 8) * (roomCount - 1) * newRect.lossyScale.y);
+        newRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 1.0f, parent_transform.rect.height);
+        //newRect.position = new Vector2(newRect.position.x, newRect.position.y - (parent_transform.rect.height / 8) * (numAlerts) * newRect.lossyScale.y);
 
         mAlertText = this.transform.FindChild("Text").GetComponent<Text>();
-        mAlertText.rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 1.0f, parent_transform.rect.width);
-        newRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 1.0f, (parent_transform.rect.height / 8));
+        mAlertText.rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 10.0f, parent_transform.rect.width);
     }
 
     public void UpdateAlertText(string new_text)
