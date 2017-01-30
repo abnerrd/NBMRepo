@@ -15,8 +15,8 @@ public class DungeonModel : MonoBehaviour
     /// <summary>
     /// List of all the Rooms within the Dungeon. Boss Room should be [0]
     /// </summary>
-    //  TODO aherrera : replace with RoomModels
-    protected List<RoomModel> m_roomList;
+    //  TODO aherrera : replace with GameObjects!
+    public List<RoomModel> m_roomList { get; private set;}
     public int RoomCount { get { return m_roomList.Count; } }
 
     //  TODO aherrera, wspier : should this be handled by RoomModels only instead?

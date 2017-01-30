@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +11,7 @@ public class DungeonController : MonoBehaviour
 
     //  TODO aherrera : to be removed probably into GameController; he calls the shots
     public GameObject RoomPrefab;
+    public GameObject AdventurerPrefab;
     public GameObject BossRoomPrefab;
 
     private GameObject MainCanvas;
@@ -91,7 +94,7 @@ public class DungeonController : MonoBehaviour
     public void AddNewRoom(GameObject new_room_prefab)
     {
         mDungeonModel.AddRoomToDungeon(new_room_prefab);
-        mDungeonView.AddRoomToDungeon(new_room_prefab);
+        mDungeonView.AddRoomToDungeon (new_room_prefab, mDungeonModel.m_roomList);
     }
 
     public string AddNewParty(GameObject party, bool automatic_start = false)
@@ -125,6 +128,7 @@ public class DungeonController : MonoBehaviour
     public void AddRandomRoom()
     {
         GameObject newRoomPrefab = Instantiate(RoomPrefab);
+        newRoomPrefab.GetComponent<RoomView> ().initialize ();
         RoomModel newRoom = RoomGenerator.instance.GenerateUnique();
         newRoomPrefab.name = newRoom.room_name;
         newRoomPrefab.AddComponent<RoomModel>(newRoom);
@@ -135,21 +139,21 @@ public class DungeonController : MonoBehaviour
     //  TODO aherrera : DEBUG SCRIPT; kill this before it's too late
     public void AddRandomParty()
     {
-        GameObject new_Adventurer = new GameObject ();
+        GameObject new_Adventurer = Instantiate (AdventurerPrefab);
         AdventurerModel new_model = AdventurerGenerator.instance.GenerateRandom(ref new_Adventurer, 1, Enums.UnitRarity.e_rarity_COMMON);
         GameObject new_party = new GameObject();
-        PartyModel go_pm = new_party.AddComponent<PartyModel> ();
-        PartyController go_pc = new_party.AddComponent<PartyController> ();
+        PartyModel new_party_model = new_party.AddComponent<PartyModel> ();
+        PartyController new_party_controller = new_party.AddComponent<PartyController> ();
 
         //AdventurerPacket newpackofcigs = go_adventurerpacket.AddComponent<AdventurerPacket>();
-        new_party.name = "AD_PACK: " + go_pm._AdventureTitle;
-        go_pc.InitializeParty();
-        go_pm._Adventurers.Add(new_Adventurer);
+        new_party.name = checkDictionaryForKey (new_party_controller.GetAdventureTitle ());
+        new_party_controller.InitializeParty();
+        new_party_model._Adventurers.Add(new_Adventurer);
 
-        RoomModel room_model = mDungeonModel.GetRoom(go_pc.GetCurrentRoomIndex());
+        RoomModel room_model = mDungeonModel.GetRoom(new_party_controller.GetCurrentRoomIndex());
 
         AddNewParty(new_party, true);
-        go_pc.BeginRoom(room_model.timer_frequency);
+        new_party_controller.BeginRoom(room_model.timer_frequency);
     }
 
     protected void HandlePacketTimerUp(string packet_key)
@@ -183,7 +187,7 @@ public class DungeonController : MonoBehaviour
     {
         PartyController pc = new_party.GetComponent<PartyController>();
         //  TODO aherrera : probably make sure i'm unique
-        string packet_key = pc.GetAdventureTitle();
+        string packet_key = checkDictionaryForKey(pc.GetAdventureTitle());
         m_questingParties.Add(packet_key, new_party);
 
         InitializePacketToRoom(packet_key, mDungeonModel.GetEntrance());
@@ -297,6 +301,7 @@ public class DungeonController : MonoBehaviour
         return false;
     }
 
+    // TODO Rename this function
     /// <summary>
     /// Initialize Packet data to it's Current Room.
     /// Optional param sets to given room index
@@ -320,10 +325,13 @@ public class DungeonController : MonoBehaviour
         }
 
         RoomModel current_room_reference = mDungeonModel.GetRoom(party.GetCurrentRoomIndex());
+        RoomView currentRoomView = current_room_reference.gameObject.GetComponent<RoomView> ();
 
         if (current_room_reference != null)
         {
             party.SetRoomTimer(Helper.Epoch.GetEpochTimestamp(current_room_reference.timer_frequency));
+            currentRoomView.addAdventurer (party.GetAdventurers ()[0]);
+
         }
         else { Debug.LogError("DungeonModel::InitializePacketToCurrentRoom -- currentroom not found for string: " + packet_key); }
 
@@ -338,5 +346,36 @@ public class DungeonController : MonoBehaviour
         }
     }
 
+    public string checkDictionaryForKey (string key)
+    {
+        Debug.Log ("MY KEY IS: " + key);
+        
+        if (m_questingParties.ContainsKey (key))
+        {
+            string iter = key.Substring(0);
+            int iterInt = 0;
+            while (iter != "|" && iterInt != key.Length-1) 
+            {
+                Debug.Log ("iter = " + iter);
+                iter = key.Substring (iterInt,1);
+                iterInt++;
+            }
+            string prefix = key.Substring (0, iterInt);
+            string suffix = key.Substring (iterInt, (key.Length-iterInt));
+            int suffixInt;
+            Debug.Log ("suffix = " + suffix);
+            if (Int32.TryParse (suffix, out suffixInt)) {
+                suffixInt++;
+                string newKey = (prefix + "|" + suffixInt);
+                Debug.Log ("I INCREMENTED!");
+                return newKey;
+            } else {
+                string newKey = (prefix + "|" + 0);
+                Debug.Log ("FRESH KEY: " + newKey);
+                return newKey;
+            }
+        }
+        return key;
+    }
 
 }

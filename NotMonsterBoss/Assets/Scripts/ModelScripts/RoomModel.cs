@@ -79,6 +79,8 @@ public class RoomModel : MonoBehaviour
 
     RoomView mView;
 
+    public int _MaxAdventurers { get; private set;}
+
     // Use this for initialization
     void Start ()
     {
